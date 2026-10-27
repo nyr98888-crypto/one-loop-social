@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --studio-navbar: #0b0f19;
+  --studio-bg: #f8fafc;
+  --studio-card: #ffffff;
+  --sky-brand: #0ea5e9;
+  --sky-hover: #0284c7;
+  --sky-light: #e0f2fe;
+  --sky-glow: rgba(14, 165, 233, 0.25);
+}
+
+body {
+  color: #0f172a;
+  background: var(--studio-bg);
+  font-family: var(--font-heebo), var(--font-assistant), sans-serif;
+}
+
+@layer components {
+  .studio-input {
+    @apply w-full rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-brand focus:bg-white focus:ring-4 focus:ring-sky-glow disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .studio-cta-glow {
+    animation: studio-glow-pulse 2.4s ease-in-out infinite;
+  }
+
+  .studio-shimmer {
+    background: linear-gradient(
+      110deg,
+      transparent 25%,
+      rgba(14, 165, 233, 0.12) 45%,
+      rgba(255, 255, 255, 0.55) 50%,
+      rgba(14, 165, 233, 0.12) 55%,
+      transparent 75%
+    );
+    background-size: 200% 100%;
+    animation: studio-shimmer-move 1.6s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes studio-shimmer-move {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+@keyframes studio-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 18px rgba(14, 165, 233, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(14, 165, 233, 0.5);
+  }
+}
