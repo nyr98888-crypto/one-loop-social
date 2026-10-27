@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   OPENROUTER_MODEL,
   OPENROUTER_URL,

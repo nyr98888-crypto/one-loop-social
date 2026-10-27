@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, Loader2, Sparkles, Wand2 } from "lucide-react";
+import { Loader2, Sparkles, Wand2 } from "lucide-react";
 import { usePostStore } from "@/store/usePostStore";
 import type { GeneratedPostContent } from "@/lib/ai/types";
 
 export default function ControlConsole() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const businessName = usePostStore((s) => s.businessName);
@@ -40,7 +38,12 @@ export default function ControlConsole() {
       };
 
       if (!postRes.ok || !postJson.post) {
-        throw new Error(postJson.error ?? "יצירת הטקסט נכשלה");
+        const raw = postJson.error ?? "יצירת הטקסט נכשלה";
+        throw new Error(
+          /expected|businessName|postGoal/i.test(raw)
+            ? "נא למלא שם עסק ומטרת פוסט"
+            : raw,
+        );
       }
 
       const { post } = postJson;
@@ -87,10 +90,7 @@ export default function ControlConsole() {
         <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sky-light text-sky-brand">
           <Wand2 className="h-[18px] w-[18px]" />
         </span>
-        <div>
-          <h2 className="text-base font-bold text-slate-900">קונסולת יצירה</h2>
-          <p className="text-xs text-slate-500">השינויים מתעדכנים בלייב במוקאפים</p>
-        </div>
+        <h2 className="text-base font-bold text-slate-900">יצירת פוסט</h2>
       </div>
 
       <div className="space-y-5">
@@ -118,7 +118,7 @@ export default function ControlConsole() {
           />
         </Field>
 
-        <Field label="מה המטרה או המבצע של הפוסט?" htmlFor="postGoal">
+        <Field label="מטרת הפוסט" htmlFor="postGoal">
           <textarea
             id="postGoal"
             value={postGoal}
@@ -126,7 +126,7 @@ export default function ControlConsole() {
             disabled={isGenerating}
             rows={4}
             className="studio-input min-h-[7.5rem] resize-y"
-            placeholder="תארו את המבצע, ההטבה או המסר העיקרי..."
+            placeholder="הטבה או מסר עיקרי..."
           />
         </Field>
       </div>
@@ -141,42 +141,34 @@ export default function ControlConsole() {
       ) : null}
 
       <div className="mt-7">
-        {!isGenerated ? (
-          <button
-            type="button"
-            onClick={handleGenerate}
-            disabled={isGenerating || !businessName.trim() || !postGoal.trim()}
-            className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-b from-sky-brand to-sky-hover px-5 py-4 text-base font-bold text-white shadow-[0_8px_0_0_#0369a1] transition-all duration-150 enabled:hover:translate-y-[2px] enabled:hover:shadow-[0_6px_0_0_#0369a1] enabled:active:translate-y-[6px] enabled:active:shadow-[0_2px_0_0_#0369a1] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none"
-          >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              {isGenerating ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  עוזר הסטודיו מכין את הפוסט שלך...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-5 w-5 transition group-hover:rotate-12" />
-                  צור את הפוסט שלי
-                </>
-              )}
-            </span>
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={isGenerating || !businessName.trim() || !postGoal.trim()}
+          className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-b from-sky-brand to-sky-hover px-5 py-4 text-base font-bold text-white shadow-[0_8px_0_0_#0369a1] transition-all duration-150 enabled:hover:translate-y-[2px] enabled:hover:shadow-[0_6px_0_0_#0369a1] enabled:active:translate-y-[6px] enabled:active:shadow-[0_2px_0_0_#0369a1] disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none"
+        >
+          <span className="relative z-10 flex items-center justify-center gap-2">
             {isGenerating ? (
-              <span className="absolute inset-0 animate-pulse bg-white/10" />
-            ) : null}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => router.push("/studio")}
-            className="studio-cta-glow group w-full rounded-2xl bg-gradient-to-b from-sky-brand to-sky-hover px-5 py-4 text-base font-bold text-white shadow-sky-glow transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(14,165,233,0.45)] active:translate-y-0"
-          >
-            <span className="inline-flex items-center justify-center gap-2 transition group-hover:gap-3">
-              פתח בסטודיו לעריכה ופרסום
-              <ArrowLeft className="h-5 w-5 transition group-hover:-translate-x-1" />
-            </span>
-          </button>
-        )}
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                מכין פוסט...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-5 w-5 transition group-hover:rotate-12" />
+                {isGenerated ? "צור שוב" : "צור פוסט"}
+              </>
+            )}
+          </span>
+          {isGenerating ? (
+            <span className="absolute inset-0 animate-pulse bg-white/10" />
+          ) : null}
+        </button>
+        {!businessName.trim() || !postGoal.trim() ? (
+          <p className="mt-2.5 text-center text-[11px] text-slate-500">
+            נא למלא שם עסק ומטרת פוסט
+          </p>
+        ) : null}
       </div>
     </section>
   );

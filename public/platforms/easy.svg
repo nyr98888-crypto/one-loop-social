@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="easy">
+  <defs>
+    <radialGradient id="easy-bg" cx="50%" cy="42%" r="68%">
+      <stop offset="0%" stop-color="#2AB0E8"/>
+      <stop offset="55%" stop-color="#1296D4"/>
+      <stop offset="100%" stop-color="#007EBA"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#easy-bg)"/>
+  <!-- White pin / lowercase e mark -->
+  <path
+    fill="#FFFFFF"
+    d="M32 10c-9.4 0-17 7.3-17 16.3 0 11.2 14.2 25.4 15.7 26.8a1.9 1.9 0 0 0 2.6 0C34.8 51.7 49 37.5 49 26.3 49 17.3 41.4 10 32 10zm0 23.6c-4.4 0-8-3.5-8-7.8s3.6-7.8 8-7.8 8 3.5 8 7.8-3.6 7.8-8 7.8z"
+  />
+</svg>

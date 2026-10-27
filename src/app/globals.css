@@ -45,6 +45,15 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hide scrollbars while keeping overflow scroll/auto functional */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes studio-shimmer-move {
@@ -64,4 +73,20 @@ body {
   50% {
     box-shadow: 0 0 32px rgba(14, 165, 233, 0.5);
   }
+}
+
+@keyframes capsule-ambient-pulse {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.04);
+  }
+}
+
+.capsule-ambient-glow {
+  animation: capsule-ambient-pulse 2.4s ease-in-out infinite;
 }

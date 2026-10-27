@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Assistant, Heebo } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
+import AppProviders from "@/components/providers/AppProviders";
+import ToastHost from "@/components/ui/ToastHost";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -28,8 +30,11 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} ${assistant.variable}`}>
       <body className="min-h-screen bg-studio-bg font-heebo antialiased">
-        <Navbar />
-        <main>{children}</main>
+        <AppProviders>
+          <Navbar />
+          <main>{children}</main>
+          <ToastHost />
+        </AppProviders>
       </body>
     </html>
   );

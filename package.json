@@ -10,11 +10,16 @@
     "test:apis": "tsx --env-file=.env.local --tsconfig tsconfig.json scripts/test-apis.ts"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.10.1",
+    "@fal-ai/server-proxy": "^1.2.1",
     "@libsql/client": "^0.18.0",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
+    "next-auth": "^5.0.0-beta.32",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
@@ -22,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sharp": "^0.31.1",
     "eslint": "^9",
     "eslint-config-next": "^15.1.0",
     "postcss": "^8",

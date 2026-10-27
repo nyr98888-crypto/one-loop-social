@@ -1,119 +1,73 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Bell,
-  HelpCircle,
-  LayoutDashboard,
-  Settings,
-  Sparkles,
-  User,
-} from "lucide-react";
+import NavigationDrawer from "@/components/layout/NavigationDrawer";
 
-type StudioStatus = "preview" | "live";
+export default function Navbar() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-interface NavbarProps {
-  status?: StudioStatus;
-}
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
-const statusLabel: Record<StudioStatus, string> = {
-  preview: "מבט מהיר",
-  live: "סטודיו חי",
-};
-
-export default function Navbar({ status = "live" }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50 h-16 border-b border-slate-800/60 bg-studio-navbar">
-      <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        {/* Right (RTL start): Logo + Brand */}
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-2.5"
-          aria-label="One Loop Social"
-        >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={160}
-            height={40}
-            className="h-10 w-auto max-w-[10rem] object-contain object-right"
-            priority
-          />
-          <span className="hidden text-base font-semibold tracking-tight text-white lg:inline">
-            One Loop{" "}
-            <span className="text-sky-brand">Social</span>
-          </span>
-        </Link>
-
-        {/* Center: Floating status badge */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div
-            className="inline-flex items-center gap-1.5 rounded-full border border-sky-brand/40 bg-sky-brand/15 px-3.5 py-1.5 text-xs font-medium text-sky-100 shadow-sky-glow"
-            role="status"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-brand opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-brand" />
-            </span>
-            <Sparkles className="h-3.5 w-3.5 text-sky-brand" aria-hidden />
-            {statusLabel[status]}
+    <>
+      <header className="sticky top-0 z-40 h-24 border-b border-slate-800/80 bg-[#070B19] py-2">
+        {/*
+          RTL (dir=rtl): flex start = physical RIGHT.
+          DOM order: menu → logo → spacer → menu sits on the far right edge.
+        */}
+        <div className="mx-auto flex h-full w-full max-w-none items-center px-6 sm:px-8">
+          {/* Far right (RTL start): menu pill flush to edge padding */}
+          <div className="flex w-[7rem] shrink-0 justify-start sm:w-[7.5rem]">
+            <button
+              type="button"
+              onClick={openDrawer}
+              onMouseEnter={() => {
+                if (
+                  typeof window !== "undefined" &&
+                  window.matchMedia("(hover: hover) and (pointer: fine)")
+                    .matches
+                ) {
+                  openDrawer();
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700/90 bg-slate-900/80 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[0_2px_0_0_#0f172a] transition hover:border-sky-500/40 hover:bg-slate-800 active:translate-y-[1px] active:shadow-none"
+              aria-label="פתח תפריט ניווט"
+              aria-expanded={drawerOpen}
+              aria-controls="navigation-drawer"
+            >
+              <span className="text-base leading-none" aria-hidden>
+                ☰
+              </span>
+              <span>תפריט</span>
+            </button>
           </div>
+
+          {/* Dead-center logo */}
+          <div className="flex flex-1 items-center justify-center">
+            <Link href="/" aria-label="One Loop Social — חזרה לדף הבית">
+              <Image
+                src="/logo.png"
+                alt="One Loop Social"
+                width={280}
+                height={64}
+                className="h-14 w-auto select-none object-contain md:h-16"
+                priority
+                unoptimized
+              />
+            </Link>
+          </div>
+
+          {/* Far left spacer — same width as menu for optical centering */}
+          <div className="w-[7rem] shrink-0 sm:w-[7.5rem]" aria-hidden />
         </div>
+      </header>
 
-        {/* Left (RTL end): Quick nav + profile */}
-        <nav className="flex shrink-0 items-center gap-1 sm:gap-2" aria-label="ניווט מהיר">
-          <NavIcon href="/" label="לוח בקרה">
-            <LayoutDashboard className="h-4 w-4" />
-          </NavIcon>
-          <NavIcon href="/settings" label="הגדרות">
-            <Settings className="h-4 w-4" />
-          </NavIcon>
-          <NavIcon href="/help" label="עזרה">
-            <HelpCircle className="h-4 w-4" />
-          </NavIcon>
-          <NavIcon href="/notifications" label="התראות">
-            <Bell className="h-4 w-4" />
-          </NavIcon>
-
-          <div className="mx-1 hidden h-6 w-px bg-slate-700/80 sm:block" />
-
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/60 py-1 pl-1 pr-2.5 text-sm text-slate-200 transition hover:border-slate-600 hover:bg-slate-800/80"
-            aria-label="פרופיל משתמש"
-          >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-light text-sky-hover">
-              <User className="h-3.5 w-3.5" />
-            </span>
-            <span className="hidden max-w-[7rem] truncate text-xs font-medium sm:inline">
-              משתמש
-            </span>
-          </button>
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function NavIcon({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-label={label}
-      title={label}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800/80 hover:text-sky-brand"
-    >
-      {children}
-    </Link>
+      <Suspense fallback={null}>
+        <NavigationDrawer open={drawerOpen} onClose={closeDrawer} />
+      </Suspense>
+    </>
   );
 }

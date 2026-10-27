@@ -2,8 +2,18 @@ import {
   MARKETING_SYSTEM_PROMPT,
   OPENROUTER_MODEL,
   OPENROUTER_URL,
+  REVIEW_REPLY_SYSTEM_PROMPT,
+  WHATSAPP_BIO_SYSTEM_PROMPT,
 } from "./constants";
-import type { GeneratedPostContent, GeneratePostRequest } from "./types";
+import type {
+  GeneratedBioContent,
+  GeneratedPostContent,
+  GeneratedReviewReply,
+  GenerateBioRequest,
+  GeneratePostRequest,
+  GenerateReviewReplyRequest,
+} from "./types";
+import { buildWaMeLink } from "./whatsapp";
 
 export class OpenRouterError extends Error {
   constructor(
@@ -78,9 +88,11 @@ function assertPostContent(value: unknown): GeneratedPostContent {
   };
 }
 
-export async function generateMarketingPost(
-  input: GeneratePostRequest,
-): Promise<GeneratedPostContent> {
+async function openRouterJsonChat(
+  system: string,
+  user: string,
+  temperature = 0.7,
+): Promise<unknown> {
   const res = await fetch(OPENROUTER_URL, {
     method: "POST",
     headers: {
@@ -91,11 +103,11 @@ export async function generateMarketingPost(
     },
     body: JSON.stringify({
       model: process.env.OPENROUTER_MODEL ?? OPENROUTER_MODEL,
-      temperature: 0.7,
+      temperature,
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: MARKETING_SYSTEM_PROMPT },
-        { role: "user", content: buildUserMessage(input) },
+        { role: "system", content: system },
+        { role: "user", content: user },
       ],
     }),
   });
@@ -114,5 +126,104 @@ export async function generateMarketingPost(
     throw new OpenRouterError("Empty OpenRouter response", 502, data);
   }
 
-  return assertPostContent(extractJsonObject(content));
+  return extractJsonObject(content);
+}
+
+export async function generateMarketingPost(
+  input: GeneratePostRequest,
+): Promise<GeneratedPostContent> {
+  return assertPostContent(
+    await openRouterJsonChat(MARKETING_SYSTEM_PROMPT, buildUserMessage(input)),
+  );
+}
+
+function buildBioUserMessage(input: GenerateBioRequest): string {
+  return [
+    `שם העסק: ${input.businessName}`,
+    `שירותים מובילים: ${input.services}`,
+    `כתובת / אזור פעילות: ${input.serviceArea}`,
+    `מספר וואטסאפ: ${input.whatsappNumber}`,
+    `שעות פתיחה: ${input.openingHours}`,
+    "",
+    "החזר JSON עם: bio, tagline, greeting",
+  ].join("\n");
+}
+
+function assertBioContent(
+  value: unknown,
+  whatsappNumber: string,
+): GeneratedBioContent {
+  if (!value || typeof value !== "object") {
+    throw new OpenRouterError("Invalid bio payload shape", 502, value);
+  }
+
+  const obj = value as Record<string, unknown>;
+  for (const key of ["bio", "tagline", "greeting"] as const) {
+    if (typeof obj[key] !== "string" || !obj[key].trim()) {
+      throw new OpenRouterError(`Missing or empty field: ${key}`, 502, value);
+    }
+  }
+
+  const greeting = (obj.greeting as string).trim();
+  const waMeLink = buildWaMeLink(whatsappNumber, greeting) ?? "";
+
+  return {
+    bio: (obj.bio as string).trim(),
+    tagline: (obj.tagline as string).trim(),
+    greeting,
+    waMeLink,
+  };
+}
+
+export async function generateWhatsAppBio(
+  input: GenerateBioRequest,
+): Promise<GeneratedBioContent> {
+  return assertBioContent(
+    await openRouterJsonChat(
+      WHATSAPP_BIO_SYSTEM_PROMPT,
+      buildBioUserMessage(input),
+      0.65,
+    ),
+    input.whatsappNumber,
+  );
+}
+
+function buildReviewReplyUserMessage(input: GenerateReviewReplyRequest): string {
+  const platformLabel = input.platform === "easy" ? "איזי (easy)" : "Google";
+  return [
+    input.businessName?.trim()
+      ? `שם העסק: ${input.businessName.trim()}`
+      : null,
+    `פלטפורמה: ${platformLabel}`,
+    `שם הלקוח: ${input.customerName}`,
+    `דירוג: ${input.rating}/5`,
+    `טקסט הביקורת: ${input.reviewText}`,
+    "",
+    "החזר JSON עם: reply",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+function assertReviewReply(value: unknown): GeneratedReviewReply {
+  if (!value || typeof value !== "object") {
+    throw new OpenRouterError("Invalid review-reply payload shape", 502, value);
+  }
+  const obj = value as Record<string, unknown>;
+  if (typeof obj.reply !== "string" || !obj.reply.trim()) {
+    throw new OpenRouterError("Missing or empty field: reply", 502, value);
+  }
+  return { reply: obj.reply.trim() };
+}
+
+export async function generateReviewReply(
+  input: GenerateReviewReplyRequest,
+): Promise<GeneratedReviewReply> {
+  return assertReviewReply(
+    await openRouterJsonChat(
+      REVIEW_REPLY_SYSTEM_PROMPT,
+      buildReviewReplyUserMessage(input),
+      0.7,
+    ),
+  );
 }

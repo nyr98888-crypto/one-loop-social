@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { OpenRouterError, generateMarketingPost } from "@/lib/ai/openrouter";
-import { saveGeneratedPost } from "@/lib/db/posts";
 import type { GeneratePostRequest } from "@/lib/ai/types";
 
 export const runtime = "nodejs";
@@ -44,30 +43,13 @@ export async function POST(request: Request) {
       );
     }
 
+    // Text generation only — permanent `posts` rows require a chosen image
+    // via the draft-variant lifecycle (`post_draft_variants` → `posts`).
     const post = await generateMarketingPost(body);
-
-    let saved: Awaited<ReturnType<typeof saveGeneratedPost>> | null = null;
-    try {
-      saved = await saveGeneratedPost({
-        businessName: body.businessName,
-        industry: body.industry,
-        headline: post.headline,
-        igCaption: post.instagramCaption,
-        fbCaption: post.facebookCaption,
-        imageUrl: null,
-        status: "generated",
-      });
-    } catch (dbErr) {
-      // Generation succeeded — do not fail the request if persistence hiccups.
-      console.error("[generate-post] db persist failed", dbErr);
-    }
 
     return NextResponse.json({
       ok: true,
       post,
-      saved: saved
-        ? { id: saved.id, businessId: saved.businessId, status: saved.status }
-        : null,
     });
   } catch (err) {
     if (err instanceof OpenRouterError) {

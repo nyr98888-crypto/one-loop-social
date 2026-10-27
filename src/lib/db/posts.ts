@@ -1,5 +1,6 @@
-import { db } from "./client";
-import { initDb } from "./schema";
+import "server-only";
+
+import { db, initDb } from "./client";
 
 export interface SaveGeneratedPostInput {
   businessName: string;
@@ -7,8 +8,7 @@ export interface SaveGeneratedPostInput {
   headline: string;
   igCaption: string;
   fbCaption: string;
-  imageUrl?: string | null;
-  status?: "draft" | "generated" | "published";
+  selectedImageUrl: string;
 }
 
 export interface SavedPostRecord {
@@ -17,8 +17,7 @@ export interface SavedPostRecord {
   headline: string;
   igCaption: string;
   fbCaption: string;
-  imageUrl: string | null;
-  status: string;
+  selectedImageUrl: string;
   createdAt: string;
 }
 
@@ -55,11 +54,15 @@ export async function upsertBusiness(input: {
   return id;
 }
 
-/** Persist a generated marketing post (creates/updates the business first). */
+/** Persist a permanently chosen marketing post (creates/updates the business first). */
 export async function saveGeneratedPost(
   input: SaveGeneratedPostInput,
 ): Promise<SavedPostRecord> {
   await initDb();
+
+  if (!input.selectedImageUrl.trim()) {
+    throw new Error("selectedImageUrl is required for permanent posts");
+  }
 
   const businessId = await upsertBusiness({
     name: input.businessName,
@@ -67,26 +70,23 @@ export async function saveGeneratedPost(
   });
 
   const id = newId();
-  const status = input.status ?? "generated";
-  const imageUrl = input.imageUrl ?? null;
 
   await db.execute({
     sql: `INSERT INTO posts (
-      id, business_id, headline, ig_caption, fb_caption, image_url, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      id, business_id, headline, ig_caption, fb_caption, selected_image_url
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
     args: [
       id,
       businessId,
       input.headline,
       input.igCaption,
       input.fbCaption,
-      imageUrl,
-      status,
+      input.selectedImageUrl,
     ],
   });
 
   const result = await db.execute({
-    sql: `SELECT id, business_id, headline, ig_caption, fb_caption, image_url, status, created_at
+    sql: `SELECT id, business_id, headline, ig_caption, fb_caption, selected_image_url, created_at
           FROM posts WHERE id = ?`,
     args: [id],
   });
@@ -98,9 +98,9 @@ export async function saveGeneratedPost(
     headline: String(saved?.headline ?? input.headline),
     igCaption: String(saved?.ig_caption ?? input.igCaption),
     fbCaption: String(saved?.fb_caption ?? input.fbCaption),
-    imageUrl:
-      saved?.image_url == null ? imageUrl : String(saved.image_url),
-    status: String(saved?.status ?? status),
+    selectedImageUrl: String(
+      saved?.selected_image_url ?? input.selectedImageUrl,
+    ),
     createdAt: String(saved?.created_at ?? new Date().toISOString()),
   };
 }

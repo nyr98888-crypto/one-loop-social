@@ -1,55 +1,125 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Loader2, Pencil } from "lucide-react";
+import MobileActionTray from "@/components/studio/MobileActionTray";
+import PreviewColumn from "@/components/studio/PreviewColumn";
+import SessionLockBanner from "@/components/studio/SessionLockBanner";
 import StudioAssistant from "@/components/studio/workspace/StudioAssistant";
-import StudioPreviewCard from "@/components/studio/workspace/StudioPreviewCard";
+import { useDraftVariantsStore } from "@/store/useDraftVariantsStore";
 import { usePostStore } from "@/store/usePostStore";
 
+function StudioTabSync() {
+  const searchParams = useSearchParams();
+  const setStudioMode = usePostStore((s) => s.setStudioMode);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "enhance") setStudioMode("enhance");
+    else if (tab === "bio" || tab === "card") setStudioMode("card");
+  }, [searchParams, setStudioMode]);
+
+  return null;
+}
+
 export default function StudioPage() {
-  const businessName = usePostStore((s) => s.businessName);
-  const isGenerated = usePostStore((s) => s.isGenerated);
+  const mobileStage = usePostStore((s) => s.mobileStage);
+  const setMobileStage = usePostStore((s) => s.setMobileStage);
+  const hasHydrated = usePostStore((s) => s._hasHydrated);
+  /** Dual enhance results — mirrored from the draft store for studio-wide sync. */
+  const enhancedResults = useDraftVariantsStore((s) => s.pendingEnhanceFlavors);
+  const activeFlavor = useDraftVariantsStore((s) => s.activeFlavor);
+  /** Pre-enhance radio: authentic | studio (default authentic). */
+  useDraftVariantsStore((s) => s.selectedEnhanceStyle);
+  const [ready, setReady] = useState(false);
+
+  // Keep mockupImage aligned when flavor toggles (store already writes generatedImage;
+  // this subscription ensures the studio page re-renders with the active pair).
+  useEffect(() => {
+    if (!enhancedResults || !activeFlavor) return;
+    const url =
+      activeFlavor === "natural"
+        ? enhancedResults.naturalUrl
+        : enhancedResults.studioUrl;
+    if (url) usePostStore.getState().setGeneratedImage(url);
+  }, [enhancedResults, activeFlavor]);
+
+  useEffect(() => {
+    const result = usePostStore.persist.rehydrate();
+    Promise.resolve(result).finally(() => setReady(true));
+  }, []);
+
+  const showContent = ready || hasHydrated;
+  /** Mobile: form-only until generation; then preview-only. Desktop: both. */
+  const showMobileForm = mobileStage === "form";
+  const showMobilePreview = mobileStage === "preview";
 
   return (
-    <div className="h-[calc(100vh-64px)] overflow-hidden bg-slate-100/70">
-      <div className="mx-auto flex h-full max-w-[1550px] flex-col px-4 py-3 sm:px-6">
-        {/* Compact header — stays inside the zero-scroll viewport */}
-        <div className="mb-3 flex shrink-0 items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-3">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 transition hover:text-sky-brand"
-              >
-                <ArrowRight className="h-3.5 w-3.5" />
-                סטודיו חי
-              </Link>
-              <span className="hidden h-3 w-px bg-slate-300 sm:block" />
-              <h1 className="truncate text-sm font-bold text-slate-900 sm:text-base">
-                סטודיו · {businessName}
-              </h1>
-            </div>
-            {!isGenerated ? (
-              <p className="mt-0.5 text-[11px] text-slate-500">
-                עדיין אין פוסט שנוצר — אפשר לערוך ידנית או לחזור ליצירה המהירה.
-              </p>
-            ) : null}
-          </div>
-          <span className="hidden rounded-full bg-sky-light px-2.5 py-1 text-[11px] font-bold text-sky-brand sm:inline">
-            עריכה ופרסום
-          </span>
-        </div>
+    <div className="no-scrollbar flex h-[calc(100vh-96px)] flex-col overflow-hidden bg-slate-100/70">
+      <Suspense fallback={null}>
+        <StudioTabSync />
+      </Suspense>
+      <SessionLockBanner />
 
-        {/* Two balanced columns — RTL: Assistant (right) · Preview (left) */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-          <div className="order-2 min-h-0 overflow-hidden lg:order-none">
-            <StudioAssistant />
+      <div className="mx-auto flex min-h-0 w-full max-w-[1550px] flex-1 flex-col px-3 py-1 sm:px-5">
+        {showMobilePreview ? (
+          <div className="mb-1 flex shrink-0 justify-end lg:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileStage("form")}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 shadow-sm"
+            >
+              <Pencil className="h-3 w-3" />
+              טופס
+            </button>
           </div>
-          <div className="order-1 min-h-0 overflow-hidden lg:order-none">
-            <StudioPreviewCard />
+        ) : null}
+
+        {!showContent ? (
+          <div className="flex flex-1 items-center justify-center gap-2 text-sm text-slate-500">
+            <Loader2 className="h-5 w-5 animate-spin text-sky-brand" />
+            טוען...
           </div>
-        </div>
+        ) : (
+          <div
+            className={[
+              "grid min-h-0 flex-1 items-start gap-2.5 lg:grid-cols-2 lg:gap-3",
+              showMobilePreview ? "pb-24 lg:pb-0" : "",
+            ].join(" ")}
+          >
+            {/* RTL: first cell = right = form; second = left = preview */}
+            <div
+              className={[
+                "min-h-0 w-full self-start overflow-hidden",
+                showMobileForm
+                  ? "flex justify-center"
+                  : "hidden lg:block",
+              ].join(" ")}
+            >
+              <div
+                className={[
+                  "w-full",
+                  showMobileForm ? "mx-auto max-w-lg" : "",
+                ].join(" ")}
+              >
+                <StudioAssistant />
+              </div>
+            </div>
+
+            <div
+              className={[
+                "min-h-0 w-full self-start overflow-hidden",
+                showMobilePreview ? "block" : "hidden lg:block",
+              ].join(" ")}
+            >
+              <PreviewColumn />
+            </div>
+          </div>
+        )}
       </div>
+
+      {showContent && showMobilePreview ? <MobileActionTray /> : null}
     </div>
   );
 }
