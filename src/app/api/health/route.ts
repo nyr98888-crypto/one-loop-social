@@ -1,28 +1,31 @@
 import { NextResponse } from "next/server";
-import { runHealthChecks } from "@/lib/health/checks";
+import { LLM_CASCADE } from "@/lib/ai/llm-cascade";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
 
-/**
- * GET /api/health — independent diagnostics for OpenRouter, FAL.ai, and Turso/libSQL.
- */
 export async function GET() {
-  try {
-    const report = await runHealthChecks();
-    return NextResponse.json(report, {
-      status: report.ok ? 200 : 503,
-    });
-  } catch (err) {
-    console.error("[health]", err);
-    return NextResponse.json(
-      {
-        ok: false,
-        checkedAt: new Date().toISOString(),
-        error: err instanceof Error ? err.message : "Health check failed",
-      },
-      { status: 500 },
-    );
-  }
+  const checkTogether = Boolean(process.env.TOGETHER_API_KEY);
+  const checkOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
+  const checkFal = Boolean(process.env.FAL_KEY);
+
+  const report = {
+    timestamp: new Date().toISOString(),
+    environment: {
+      TOGETHER_API_KEY: checkTogether ? "CONFIGURED (OK)" : "MISSING",
+      OPENROUTER_API_KEY: checkOpenRouter ? "CONFIGURED (OK)" : "MISSING",
+      FAL_KEY: checkFal ? "CONFIGURED (OK)" : "MISSING",
+    },
+    routingMap: Object.fromEntries(
+      LLM_CASCADE.map((s) => [
+        `tier${s.tier}`,
+        `${s.provider === "openrouter" ? "OpenRouter" : "Together AI"} (${s.model})`,
+      ]),
+    ),
+    visual: "FAL AI (fal-ai/flux-pro/v1.1 → fal-ai/recraft-v3)",
+    status:
+      checkTogether && checkOpenRouter && checkFal ? "HEALTHY" : "DEGRADED",
+  };
+
+  return NextResponse.json(report, { status: 200 });
 }

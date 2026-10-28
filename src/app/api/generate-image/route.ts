@@ -4,7 +4,13 @@ import {
   buildCommercialPrompt,
 } from "@/lib/ai/constants";
 import { FalError, generateFluxImage } from "@/lib/ai/fal";
-import type { GenerateImageRequest } from "@/lib/ai/types";
+import type { GenerateImageRequest, MarketContext } from "@/lib/ai/types";
+import {
+  parseMarketContext,
+  resolveLockedPostImageSize,
+  toFalImageSize,
+} from "@/lib/ai/image-aspect";
+import { expandVisualPrompt } from "@/lib/ai/visual-prompt-expander";
 import {
   cleanExpiredDrafts,
   getVariantsBySession,
@@ -16,16 +22,7 @@ import {
 import { insertDraftVariant } from "@/lib/db/drafts";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
-
-const VALID_SIZES = new Set([
-  "square_hd",
-  "square",
-  "portrait_4_3",
-  "portrait_16_9",
-  "landscape_4_3",
-  "landscape_16_9",
-]);
+export const maxDuration = 90;
 
 interface GenerateImageBody extends GenerateImageRequest {
   sessionId?: string;
@@ -34,42 +31,51 @@ interface GenerateImageBody extends GenerateImageRequest {
   fbCaption?: string;
 }
 
+function asTrimmed(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 function parseBody(body: unknown): GenerateImageBody | null {
   if (!body || typeof body !== "object") return null;
-  const {
-    prompt,
-    model,
-    imageSize,
-    sessionId,
-    headline,
-    igCaption,
-    fbCaption,
-  } = body as Record<string, unknown>;
+  const o = body as Record<string, unknown>;
 
-  if (typeof prompt !== "string" || !prompt.trim()) return null;
+  const prompt = asTrimmed(o.prompt);
+  if (!prompt) return null;
 
-  const parsed: GenerateImageBody = { prompt: prompt.trim() };
+  const parsed: GenerateImageBody = { prompt };
 
-  if (model === "schnell" || model === "pro") {
-    parsed.model = model;
+  if (o.model === "schnell" || o.model === "pro" || o.model === "recraft") {
+    parsed.model = o.model;
   }
 
-  if (typeof imageSize === "string" && VALID_SIZES.has(imageSize)) {
-    parsed.imageSize = imageSize as GenerateImageRequest["imageSize"];
+  const imageSize = asTrimmed(o.imageSize);
+  if (
+    imageSize === "square_hd" ||
+    imageSize === "square" ||
+    imageSize === "portrait_4_5"
+  ) {
+    parsed.imageSize =
+      imageSize === "square" ? "square_hd" : imageSize;
   }
 
-  if (typeof sessionId === "string" && sessionId.trim()) {
-    parsed.sessionId = sessionId.trim();
-  }
-  if (typeof headline === "string" && headline.trim()) {
-    parsed.headline = headline.trim();
-  }
-  if (typeof igCaption === "string" && igCaption.trim()) {
-    parsed.igCaption = igCaption.trim();
-  }
-  if (typeof fbCaption === "string" && fbCaption.trim()) {
-    parsed.fbCaption = fbCaption.trim();
-  }
+  parsed.marketContext = parseMarketContext(o.marketContext);
+  const targetPlatform = asTrimmed(o.targetPlatform);
+  if (targetPlatform) parsed.targetPlatform = targetPlatform;
+  const businessName = asTrimmed(o.businessName);
+  if (businessName) parsed.businessName = businessName;
+  const industry = asTrimmed(o.industry);
+  if (industry) parsed.industry = industry;
+  const postGoal = asTrimmed(o.postGoal);
+  if (postGoal) parsed.postGoal = postGoal;
+
+  const sessionId = asTrimmed(o.sessionId);
+  if (sessionId) parsed.sessionId = sessionId;
+  const headline = asTrimmed(o.headline);
+  if (headline) parsed.headline = headline;
+  const igCaption = asTrimmed(o.igCaption);
+  if (igCaption) parsed.igCaption = igCaption;
+  const fbCaption = asTrimmed(o.fbCaption);
+  if (fbCaption) parsed.fbCaption = fbCaption;
 
   return parsed;
 }
@@ -84,7 +90,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Always sweep abandoned drafts before generation work.
     await cleanExpiredDrafts();
 
     let nextIndex: number | null = null;
@@ -100,12 +105,37 @@ export async function POST(request: Request) {
       }
     }
 
-    const commercialPrompt = buildCommercialPrompt(body.prompt);
+    const marketContext: MarketContext =
+      body.marketContext ?? "israeli_local";
+
+    // 1) Cultural Visual Expander (LLM) — prioritize user visual notes, never raw→Flux
+    const expanded = await expandVisualPrompt({
+      concept: body.prompt,
+      postGoal: body.postGoal,
+      marketContext,
+      businessName: body.businessName,
+      industry: body.industry,
+    });
+
+    // 2) Category-aware commercial wrapper + banned-token / no-random-faces safety net
+    const commercialPrompt = buildCommercialPrompt(expanded.prompt, {
+      industry: body.industry,
+      postGoal: body.postGoal,
+    });
+
+    // 3) Strict 1:1 or 4:5 lock
+    const locked = resolveLockedPostImageSize(
+      body.imageSize,
+      body.targetPlatform,
+    );
+    const falSize = toFalImageSize(locked);
 
     const result = await generateFluxImage({
       prompt: commercialPrompt,
-      model: body.model ?? "schnell",
-      imageSize: body.imageSize ?? "square_hd",
+      model: "recraft",
+      imageSize: falSize,
+      style: "realistic_image",
+      subStyle: "natural_light",
     });
 
     let variants = null;
@@ -130,8 +160,12 @@ export async function POST(request: Request) {
       imageUrl: result.imageUrl,
       seed: result.seed,
       prompt: commercialPrompt,
+      expandedPrompt: expanded.prompt,
+      expandSource: expanded.source,
+      marketContext,
+      aspectRatio: locked === "portrait_4_5" ? "4:5" : "1:1",
       negativePrompt: COMMERCIAL_NEGATIVE_PROMPT,
-      model: body.model ?? "schnell",
+      model: result.engine,
       ...(variantIndex != null ? { variantIndex, variants } : {}),
     });
   } catch (err) {

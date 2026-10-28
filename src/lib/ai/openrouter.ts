@@ -3,8 +3,10 @@ import {
   OPENROUTER_MODEL,
   OPENROUTER_URL,
   REVIEW_REPLY_SYSTEM_PROMPT,
+  UNIFIED_CAMPAIGN_SYSTEM_PROMPT,
   WHATSAPP_BIO_SYSTEM_PROMPT,
 } from "./constants";
+import { buildIndustryIntentPromptBlock } from "./industry-intent";
 import type {
   GeneratedBioContent,
   GeneratedPostContent,
@@ -12,6 +14,8 @@ import type {
   GenerateBioRequest,
   GeneratePostRequest,
   GenerateReviewReplyRequest,
+  UnifiedGenerateContent,
+  UnifiedGenerateRequest,
 } from "./types";
 import { buildWaMeLink } from "./whatsapp";
 
@@ -38,15 +42,39 @@ function getOpenRouterKey(): string {
 }
 
 function buildUserMessage(input: GeneratePostRequest): string {
+  const hasPhoto = Boolean(input.referenceImage?.trim());
   return [
     `שם העסק: ${input.businessName}`,
     `תחום: ${input.industry}`,
     `מטרת הפוסט: ${input.postGoal}`,
+    buildIndustryIntentPromptBlock(
+      input.industry,
+      input.postGoal,
+      input.businessName,
+    ),
+    hasPhoto
+      ? [
+          "",
+          "מצורפת תמונת עסק אמיתית שהמשתמש העלה.",
+          "כתוב קופי עברי חד וממיר שמתאים בדיוק למה שרואים בתמונה + למטרת הפוסט.",
+          "אל תמציא פרטים ויזואליים שלא נראים בתמונה.",
+          "בשדה imagePrompt כתוב באנגלית תיאור קצר ומדויק של התמונה שהועלתה (לתיעוד בלבד, לא ליצירת תמונה חדשה), והתחל ב־user_uploaded_photo:",
+        ].join("\n")
+      : "",
     "",
     "החזר אך ורק אובייקט JSON תקין (בלי markdown ובלי הסברים) עם השדות:",
     "headline, instagramCaption, facebookCaption, imagePrompt",
-  ].join("\n");
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
 }
+
+type ChatContent =
+  | string
+  | Array<
+      | { type: "text"; text: string }
+      | { type: "image_url"; image_url: { url: string } }
+    >;
 
 function extractJsonObject(raw: string): unknown {
   const trimmed = raw.trim();
@@ -84,13 +112,14 @@ function assertPostContent(value: unknown): GeneratedPostContent {
     headline: (obj.headline as string).trim(),
     instagramCaption: (obj.instagramCaption as string).trim(),
     facebookCaption: (obj.facebookCaption as string).trim(),
+    // Keep concept raw — Cultural Visual Expander runs at /api/generate-image.
     imagePrompt: (obj.imagePrompt as string).trim(),
   };
 }
 
 async function openRouterJsonChat(
   system: string,
-  user: string,
+  user: ChatContent,
   temperature = 0.7,
 ): Promise<unknown> {
   const res = await fetch(OPENROUTER_URL, {
@@ -98,8 +127,8 @@ async function openRouterJsonChat(
     headers: {
       Authorization: `Bearer ${getOpenRouterKey()}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-      "X-Title": "One Loop Social",
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "OneLoop Social",
     },
     body: JSON.stringify({
       model: process.env.OPENROUTER_MODEL ?? OPENROUTER_MODEL,
@@ -129,12 +158,199 @@ async function openRouterJsonChat(
   return extractJsonObject(content);
 }
 
+function buildVisionUserContent(input: GeneratePostRequest): ChatContent {
+  const text = buildUserMessage(input);
+  const image = input.referenceImage?.trim();
+  if (!image) return text;
+
+  return [
+    { type: "text", text },
+    { type: "image_url", image_url: { url: image } },
+  ];
+}
+
 export async function generateMarketingPost(
   input: GeneratePostRequest,
 ): Promise<GeneratedPostContent> {
   return assertPostContent(
-    await openRouterJsonChat(MARKETING_SYSTEM_PROMPT, buildUserMessage(input)),
+    await openRouterJsonChat(
+      MARKETING_SYSTEM_PROMPT,
+      buildVisionUserContent(input),
+    ),
   );
+}
+
+function buildUnifiedUserMessage(input: UnifiedGenerateRequest): string {
+  const hasPhoto = Boolean(input.referenceImage?.trim());
+  const needFal = input.needFalImagePrompt !== false && !hasPhoto;
+  return [
+    `businessName: ${input.businessName}`,
+    `industry: ${input.industry}`,
+    `postGoal (facts only — NEVER echo verbatim as caption): ${input.postGoal}`,
+    `needFalImagePrompt: ${needFal ? "true" : "false"}`,
+    input.aiImageDescription?.trim()
+      ? `aiImageDescription (user visual hint): ${input.aiImageDescription.trim()}`
+      : "",
+    buildIndustryIntentPromptBlock(
+      input.industry,
+      input.postGoal,
+      input.businessName,
+    ),
+    "",
+    "COPY RULES:",
+    "- NEVER paste postGoal / smartPrompt as Instagram, Facebook, or WhatsApp text.",
+    "- Rewrite into authentic platform-native voice (IG hook+2 paragraphs, FB community story+question, WA broadcast with reply CTA).",
+    "- Instagram hashtags: 5–6 items in the hashtags array only.",
+    hasPhoto
+      ? [
+          "",
+          "A real business photo is attached. Tailor Hebrew copy to what is visible.",
+          "Do not invent unseen visual details.",
+          "falImagePrompt / imagePrompt: short English documentation starting with user_uploaded_photo:",
+        ].join("\n")
+      : [
+          "",
+          "No upload — falImagePrompt stub only (server injects locked visual).",
+          "Forbid text/watermarks/logos/stamps in any visual description.",
+        ].join("\n"),
+    "",
+    "Return the strict JSON object described in the system prompt.",
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+}
+
+function buildUnifiedVisionContent(
+  input: UnifiedGenerateRequest,
+): ChatContent {
+  const text = buildUnifiedUserMessage(input);
+  const image = input.referenceImage?.trim();
+  if (!image) return text;
+  return [
+    { type: "text", text },
+    { type: "image_url", image_url: { url: image } },
+  ];
+}
+
+function asNonEmptyString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const t = value.trim();
+  return t ? t : null;
+}
+
+function assertUnifiedContent(value: unknown): UnifiedGenerateContent {
+  if (!value || typeof value !== "object") {
+    throw new OpenRouterError("Invalid unified campaign payload", 502, value);
+  }
+  const root = value as Record<string, unknown>;
+  const ig = root.instagram;
+  const wa = root.whatsapp;
+
+  if (!ig || typeof ig !== "object" || !wa || typeof wa !== "object") {
+    throw new OpenRouterError(
+      "Missing instagram or whatsapp blocks",
+      502,
+      value,
+    );
+  }
+
+  const igObj = ig as Record<string, unknown>;
+  const waObj = wa as Record<string, unknown>;
+
+  const headline = asNonEmptyString(igObj.headline) ?? "";
+  const caption = asNonEmptyString(igObj.caption);
+  const ctaText = asNonEmptyString(igObj.ctaText);
+  const lead = asNonEmptyString(waObj.leadIncomingMessage);
+  const reply = asNonEmptyString(waObj.businessAutoReply);
+  const action =
+    asNonEmptyString(waObj.actionButton) ?? "המשך שיחה בוואטסאפ";
+  const broadcast =
+    asNonEmptyString(waObj.broadcastMessage) ??
+    asNonEmptyString(waObj.businessAutoReply) ??
+    "";
+
+  const fbRoot = root.facebook;
+  const fbCaption =
+    fbRoot && typeof fbRoot === "object"
+      ? asNonEmptyString((fbRoot as Record<string, unknown>).caption)
+      : asNonEmptyString(root.facebookCaption);
+
+  if (!caption || !ctaText || !lead || !reply) {
+    throw new OpenRouterError(
+      "Unified campaign missing required string fields",
+      502,
+      value,
+    );
+  }
+
+  const hashtagsRaw = igObj.hashtags;
+  const hashtags = Array.isArray(hashtagsRaw)
+    ? hashtagsRaw
+        .filter((t): t is string => typeof t === "string" && t.trim().length > 0)
+        .map((t) => (t.trim().startsWith("#") ? t.trim() : `#${t.trim()}`))
+        .slice(0, 6)
+    : [];
+
+  const falImagePrompt =
+    asNonEmptyString(root.falImagePrompt) ??
+    asNonEmptyString(root.imagePrompt) ??
+    "clean photograph, unbranded product photography, bright natural light, no stamps, no stickers, no watermarks, no graphic overlays";
+
+  return {
+    instagram: {
+      headline: headline || caption.slice(0, 48),
+      caption,
+      hashtags,
+      ctaText,
+    },
+    facebook: {
+      caption: fbCaption || caption,
+    },
+    whatsapp: {
+      broadcastMessage: broadcast || reply,
+      leadIncomingMessage: lead,
+      businessAutoReply: reply,
+      actionButton: action,
+    },
+    falImagePrompt,
+    imagePrompt: falImagePrompt,
+  };
+}
+
+/** Homepage Smile Grid — one JSON with Instagram + WhatsApp + falImagePrompt. */
+export async function generateUnifiedCampaign(
+  input: UnifiedGenerateRequest,
+): Promise<UnifiedGenerateContent> {
+  return assertUnifiedContent(
+    await openRouterJsonChat(
+      UNIFIED_CAMPAIGN_SYSTEM_PROMPT,
+      buildUnifiedVisionContent(input),
+      0.75,
+    ),
+  );
+}
+
+/** Map unified payload → legacy GeneratedPostContent for older callers. */
+export function unifiedToLegacyPost(
+  unified: UnifiedGenerateContent,
+): GeneratedPostContent {
+  const tags = unified.instagram.hashtags.join(" ");
+  const igBody = [unified.instagram.caption, tags].filter(Boolean).join("\n\n");
+  return {
+    headline: unified.instagram.headline,
+    instagramCaption: igBody,
+    facebookCaption:
+      unified.facebook?.caption?.trim() ||
+      [unified.instagram.caption, unified.instagram.ctaText]
+        .filter(Boolean)
+        .join("\n\n"),
+    imagePrompt: unified.imagePrompt,
+    ctaText: unified.instagram.ctaText,
+    whatsappLeadMessage: unified.whatsapp.leadIncomingMessage,
+    whatsappBusinessReply: unified.whatsapp.businessAutoReply,
+    whatsappActionButton: unified.whatsapp.actionButton,
+    falImagePrompt: unified.falImagePrompt,
+  };
 }
 
 function buildBioUserMessage(input: GenerateBioRequest): string {

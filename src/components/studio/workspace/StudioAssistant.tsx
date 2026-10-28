@@ -15,6 +15,11 @@ import type {
   GeneratedPostContent,
 } from "@/lib/ai/types";
 import { buildDigitalCardShareUrl } from "@/lib/ai/digital-card";
+import {
+  POST_GOAL_PLACEHOLDER,
+  POST_GOAL_VISUAL_TIP,
+  buildPrioritizedImageConcept,
+} from "@/lib/ai/visual-priority";
 import type { PostDraftVariantRow } from "@/lib/db/schema";
 import { ensureDraftSessionId } from "@/lib/session/draft-session";
 import { useEnhanceImage } from "@/hooks/useEnhanceImage";
@@ -48,22 +53,24 @@ const MODES: {
 
 const ENHANCE_PRESET_CHIPS: { label: string; prompt: string }[] = [
   {
-    label: "💡 תאורת יום רכה ופוקוס חד",
-    prompt: "תאורת יום רכה וטבעית, פוקוס חד על הנושא, ניקיון עדין של רעשים",
+    label: "💡 תאורת סטודיו בהירה",
+    prompt:
+      "תאורת softbox חמה ובהירה, high-key מסחרי, רקע זוהר ונקי, פוקוס חד, גווני עור טבעיים",
   },
   {
     label: "🏢 רקע קליניקה יוקרתית",
     prompt:
-      "רקע קליניקה יוקרתית ונקייה, שיש בהיר, תאורה רכה ומחמיאה, אווירה מקצועית",
+      "רקע קליניקה יוקרתית ונקייה, שיש בהיר, תאורת סטודיו בהירה ומחמיאה, אווירה מקצועית מוארת",
   },
   {
     label: "🔧 רקע מוסך בוטיק מבריק",
     prompt:
-      "רקע מוסך בוטיק מודרני ומבריק, רצפת אפוקסי, תאורת סטודיו חמה, מראה מסחרי",
+      "רקע מוסך בוטיק מודרני ומבריק, רצפת אפוקסי, תאורת סטודיו חמה ובהירה, מראה פרסומי מסחרי",
   },
   {
-    label: "🌿 טשטוש רקע עדין ומודרני",
-    prompt: "טשטוש רקע עדין ומודרני, עומק שדה קולנועי, הדגשת הנושא במרכז",
+    label: "🌿 רקע נקי עם עומק עדין",
+    prompt:
+      "רקע נקי ומודרני עם עומק שדה עדין, תאורה בהירה ואחידה, הדגשת הנושא במרכז",
   },
 ];
 
@@ -120,6 +127,8 @@ export default function StudioAssistant() {
   const businessName = usePostStore((s) => s.businessName);
   const industry = usePostStore((s) => s.industry);
   const postGoal = usePostStore((s) => s.postGoal);
+  const marketContext = usePostStore((s) => s.marketContext);
+  const activePlatform = usePostStore((s) => s.activePlatform);
   const headline = usePostStore((s) => s.headline);
   const instagramCaption = usePostStore((s) => s.instagramCaption);
   const facebookCaption = usePostStore((s) => s.facebookCaption);
@@ -136,6 +145,7 @@ export default function StudioAssistant() {
   const setBusinessName = usePostStore((s) => s.setBusinessName);
   const setIndustry = usePostStore((s) => s.setIndustry);
   const setPostGoal = usePostStore((s) => s.setPostGoal);
+  const setMarketContext = usePostStore((s) => s.setMarketContext);
   const setHeadline = usePostStore((s) => s.setHeadline);
   const setStudioMode = usePostStore((s) => s.setStudioMode);
   const setActivePlatform = usePostStore((s) => s.setActivePlatform);
@@ -194,7 +204,12 @@ export default function StudioAssistant() {
       const res = await fetch("/api/generate-post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessName, industry, postGoal }),
+        body: JSON.stringify({
+          businessName,
+          industry,
+          postGoal,
+          marketContext,
+        }),
       });
       const json = (await res.json()) as {
         post?: GeneratedPostContent;
@@ -265,17 +280,23 @@ export default function StudioAssistant() {
     try {
       const sessionId = ensureDraftSessionId();
       setSessionId(sessionId);
-      const prompt =
-        imagePrompt ||
-        `Brand identity commercial photograph, ${businessName}: ${postGoal}`;
+      const prompt = buildPrioritizedImageConcept({
+        prompt: imagePrompt,
+        postGoal,
+        businessName,
+      });
 
       const res = await fetch("/api/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt,
+          postGoal,
           model: "schnell",
-          imageSize: "square_hd",
+          marketContext,
+          targetPlatform: activePlatform,
+          businessName,
+          industry,
           sessionId,
           headline: headline || undefined,
           igCaption: instagramCaption || undefined,
@@ -322,7 +343,12 @@ export default function StudioAssistant() {
       const postRes = await fetch("/api/generate-post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessName, industry, postGoal }),
+        body: JSON.stringify({
+          businessName,
+          industry,
+          postGoal,
+          marketContext,
+        }),
       });
       const postJson = (await postRes.json()) as {
         post?: GeneratedPostContent;
@@ -334,17 +360,23 @@ export default function StudioAssistant() {
 
       const sessionId = ensureDraftSessionId();
       setSessionId(sessionId);
-      const prompt =
-        postJson.post.imagePrompt ||
-        `Brand identity commercial photograph, ${businessName}: ${postGoal}`;
+      const prompt = buildPrioritizedImageConcept({
+        prompt: postJson.post.imagePrompt,
+        postGoal,
+        businessName,
+      });
 
       const imageRes = await fetch("/api/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt,
+          postGoal,
           model: "schnell",
-          imageSize: "square_hd",
+          marketContext,
+          targetPlatform: activePlatform,
+          businessName,
+          industry,
           sessionId,
           headline: postJson.post.headline,
           igCaption: postJson.post.instagramCaption,
@@ -381,9 +413,9 @@ export default function StudioAssistant() {
       setError(
         err instanceof Error ? friendlyError(err.message) : "שגיאה",
       );
-      setIsImageBusy(false);
     } finally {
       setBusy(null);
+      setIsImageBusy(false);
     }
   }
 
@@ -409,10 +441,10 @@ export default function StudioAssistant() {
   }
 
   return (
-    <section className="flex min-h-0 flex-col gap-2 self-start">
+    <section className="flex h-full min-h-0 flex-col gap-1.5 overflow-hidden">
       {/* Segmented mode switcher — flush top, aligns with mockup top edge */}
       <div
-        className="inline-flex w-full max-w-full flex-wrap justify-start gap-0.5 rounded-full border border-slate-200 bg-slate-100/90 p-1 shadow-sm"
+        className="inline-flex w-full max-w-full flex-wrap justify-start gap-0.5 rounded-full border border-slate-200 bg-slate-100/90 p-0.5 shadow-sm"
         role="tablist"
         aria-label="מצב סטודיו"
       >
@@ -426,10 +458,10 @@ export default function StudioAssistant() {
               aria-selected={active}
               onClick={() => switchStudioMode(id)}
               className={[
-                "flex-1 rounded-full px-2.5 py-2 text-[11px] font-bold transition sm:text-xs",
+                "flex-1 rounded-full px-2 py-1.5 text-[11px] font-bold transition sm:text-xs",
                 active
-                  ? "bg-sky-brand text-white shadow-sky-glow"
-                  : "bg-transparent text-slate-600 hover:bg-white hover:text-sky-brand",
+                  ? "bg-sky-brand text-white shadow-sky-glow ring-2 ring-sky-500 ring-offset-1"
+                  : "bg-white text-slate-800 hover:bg-sky-50 hover:text-sky-brand",
               ].join(" ")}
             >
               {label}
@@ -438,10 +470,10 @@ export default function StudioAssistant() {
         })}
       </div>
 
-      <div className="no-scrollbar flex min-h-0 flex-col gap-2 overflow-y-auto pb-1">
-        <div className="shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-md sm:p-3.5">
-          <div className="mb-2.5 flex items-start gap-2">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-sky-light text-sky-brand">
+      <div className="no-scrollbar flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto pb-1">
+        <div className="shrink-0 rounded-2xl border border-slate-200 bg-white p-2.5 shadow-md sm:p-3">
+          <div className="mb-2 flex items-start gap-2">
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-sky-light text-sky-brand">
               <activeMode.icon className="h-3.5 w-3.5" />
             </span>
             <div className="min-w-0">
@@ -451,7 +483,7 @@ export default function StudioAssistant() {
                   : activeMode.label}
               </h2>
               {studioMode === "card" ? (
-                <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+                <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">
                   ממלאים רק מה שרוצים — כל השדות אופציונליים לחלוטין. הכרטיס מוכן
                   לשיתוף מיידי בוואטסאפ בלחיצה אחת.
                 </p>
@@ -460,7 +492,7 @@ export default function StudioAssistant() {
           </div>
 
           {studioMode === "enhance" ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {pendingEnhanceFlavors ? (
                 <EnhanceFlavorPicker
                   naturalUrl={pendingEnhanceFlavors.naturalUrl}
@@ -469,10 +501,10 @@ export default function StudioAssistant() {
                   onPick={(flavor) => selectEnhanceFlavor(flavor)}
                 />
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {/* Interactive style radio cards — RTL: authentic (right) · studio (left) */}
                   <div
-                    className="grid grid-cols-1 gap-2.5 sm:grid-cols-2"
+                    className="grid grid-cols-1 gap-2 sm:grid-cols-2"
                     role="radiogroup"
                     aria-label="סגנון שדרוג"
                   >
@@ -483,7 +515,7 @@ export default function StudioAssistant() {
                       points={[
                         "שומר על המקום האמיתי שלך בלי להמציא רקעים",
                         "מחדד תווי פנים ומנקה רעשי צילום מהטלפון",
-                        "תאורה טבעית כאילו צולם ביום מושלם",
+                        "תאורה טבעית בהירה כאילו צולם ביום מושלם",
                       ]}
                     />
                     <EnhanceStyleCard
@@ -492,8 +524,8 @@ export default function StudioAssistant() {
                       onSelect={() => setSelectedEnhanceStyle("studio")}
                       points={[
                         "מחליף את הרקע לסביבת עבודה יוקרתית ומצוחצחת",
-                        "תאורת פרסומות מקצועית שמבליטה אותך",
-                        "טשטוש רקע קולנועי שמושך את העין למרכז",
+                        "תאורת softbox חמה ובהירה בסגנון פרסום",
+                        "רקע זוהר ונקי עם פוקוס חד על הנושא",
                       ]}
                     />
                   </div>
@@ -542,7 +574,7 @@ export default function StudioAssistant() {
                         setEnhanceInstruction(e.target.value);
                         setEnhanceCustomInstruction(e.target.value);
                       }}
-                      placeholder="לדוגמה: תאורת סטודיו חמה ומחמיאה, רקע מוסך בוטיק מודרני ונקי, לטשטש קלות את הרקע"
+                      placeholder="לדוגמה: תאורת softbox חמה ובהירה, רקע מוסך בוטיק מודרני ונקי, אווירה מקצועית מוארת"
                     />
                   </label>
 
@@ -633,35 +665,35 @@ export default function StudioAssistant() {
               ) : null}
             </div>
           ) : studioMode === "card" ? (
-            <div className="space-y-2.5">
-              <label className="block space-y-1">
+            <div className="space-y-1.5">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   שם העסק
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
                   placeholder="לדוגמה: סטודיו נועה עיצוב"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   תיאור קצר / סלוגן
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={services}
                   onChange={(e) => setServices(e.target.value)}
                   placeholder="לדוגמה: עיצוב פנים שמחבר אנשים למקום"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   מספר וואטסאפ
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   dir="ltr"
                   inputMode="tel"
                   value={whatsappNumber}
@@ -669,12 +701,12 @@ export default function StudioAssistant() {
                   placeholder="050-1234567"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   טלפון נוסף / ישיר
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   dir="ltr"
                   inputMode="tel"
                   value={cardDirectPhone}
@@ -682,12 +714,12 @@ export default function StudioAssistant() {
                   placeholder="03-1234567"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   אימייל
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   dir="ltr"
                   type="email"
                   inputMode="email"
@@ -696,34 +728,34 @@ export default function StudioAssistant() {
                   placeholder="hello@studio.co.il"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   כתובת / אזור פעילות
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={serviceArea}
                   onChange={(e) => setServiceArea(e.target.value)}
                   placeholder="לדוגמה: תל אביב · גוש דן"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   שעות פעילות
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={openingHours}
                   onChange={(e) => setOpeningHours(e.target.value)}
                   placeholder="א׳–ה׳ 09:00–18:00 · ו׳ לפי תיאום"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-medium text-slate-600">
                   קישור לאתר או דף חברתי
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   dir="ltr"
                   type="url"
                   inputMode="url"
@@ -764,48 +796,70 @@ export default function StudioAssistant() {
               </button>
             </div>
           ) : (
-            <div className="space-y-2.5">
-              <label className="block space-y-1">
+            <div className="space-y-1.5">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-semibold text-slate-700">
                   שם העסק
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
                   placeholder="לדוגמה: אקספרס מוטורס"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-semibold text-slate-700">
                   תחום
                 </span>
                 <input
-                  className="studio-input py-2"
+                  className="studio-input py-1.5"
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
                   placeholder="לדוגמה: מוסך מורשה"
                 />
               </label>
-              <label className="block space-y-1">
+              <label className="block space-y-0.5">
                 <span className="text-xs font-semibold text-slate-700">
                   מטרת הפוסט
                 </span>
                 <textarea
-                  className="studio-input max-h-24 min-h-[4rem] resize-none py-2 text-[13px]"
+                  className="studio-input max-h-28 min-h-[4.25rem] resize-none py-1.5 text-[13px]"
                   rows={3}
                   value={postGoal}
                   onChange={(e) => setPostGoal(e.target.value)}
-                  placeholder="לדוגמה: בדיקת בלמים וחורף"
+                  placeholder={POST_GOAL_PLACEHOLDER}
                 />
+                <p className="text-[10px] leading-snug text-slate-500">
+                  {POST_GOAL_VISUAL_TIP}
+                </p>
+              </label>
+              <label className="block space-y-0.5">
+                <span className="text-xs font-semibold text-slate-700">
+                  הקשר שוק לתמונה
+                </span>
+                <select
+                  className="studio-input py-1.5"
+                  value={marketContext}
+                  onChange={(e) =>
+                    setMarketContext(
+                      e.target.value === "global"
+                        ? "global"
+                        : "israeli_local",
+                    )
+                  }
+                >
+                  <option value="israeli_local">ישראל / מקומי</option>
+                  <option value="global">גלובלי</option>
+                </select>
               </label>
               {headline ? (
-                <label className="block space-y-1">
+                <label className="block space-y-0.5">
                   <span className="text-xs font-semibold text-slate-700">
                     כותרת
                   </span>
                   <input
-                    className="studio-input py-2"
+                    className="studio-input py-1.5"
                     value={headline}
                     onChange={(e) => setHeadline(e.target.value)}
                   />
@@ -816,8 +870,8 @@ export default function StudioAssistant() {
         </div>
 
         {studioMode === "post" ? (
-          <div className="shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-md sm:p-3.5">
-            <div className="flex flex-col gap-2">
+          <div className="mt-auto shrink-0 rounded-2xl border border-slate-200 bg-white p-2.5 shadow-md sm:p-3">
+            <div className="flex flex-col gap-1.5">
               <ActionBtn
                 label="צור פוסט מלא"
                 loading={busy === "both"}
@@ -840,13 +894,13 @@ export default function StudioAssistant() {
             </div>
 
             {showPostValidationHint ? (
-              <p className="mt-2.5 text-center text-[11px] text-slate-500">
+              <p className="mt-1.5 text-center text-[11px] text-slate-500">
                 נא למלא שם עסק ומטרת פוסט
               </p>
             ) : null}
 
             {error ? (
-              <p className="mt-3 text-xs text-red-600" role="alert">
+              <p className="mt-1.5 text-xs text-red-600" role="alert">
                 {error}
               </p>
             ) : null}
@@ -881,37 +935,27 @@ function EnhanceStyleCard({
       aria-checked={selected}
       onClick={onSelect}
       className={[
-        "rounded-2xl px-3 py-2.5 text-right transition-all",
+        "rounded-xl px-2.5 py-2 text-right transition-all",
         selected
-          ? "border-2 border-sky-400 bg-sky-950/40 shadow-[0_0_20px_rgba(56,189,248,0.25)]"
-          : "cursor-pointer border border-slate-700/80 bg-slate-900/70 hover:border-slate-500",
+          ? "border-2 border-sky-400 bg-sky-50 ring-2 ring-sky-500"
+          : "cursor-pointer border border-slate-200 bg-white hover:border-sky-300 hover:bg-sky-50/40",
       ].join(" ")}
     >
-      <div className="mb-1.5 flex items-center justify-between gap-2">
-        <p
-          className={[
-            "text-base font-bold",
-            selected ? "text-sky-300" : "text-slate-200 font-medium",
-          ].join(" ")}
-        >
-          {title}
-        </p>
-        {selected ? (
-          <span className="shrink-0 rounded-full bg-sky-500/25 px-2 py-0.5 text-[10px] font-bold text-sky-300 ring-1 ring-sky-400/50">
-            ✓ נבחר
-          </span>
-        ) : null}
-      </div>
-      <ul className="space-y-1">
+      <p
+        className={[
+          "mb-1 text-sm font-bold",
+          selected ? "text-sky-800" : "text-slate-900",
+        ].join(" ")}
+      >
+        {title}
+      </p>
+      <ul className="space-y-0.5">
         {points.map((p) => (
           <li
             key={p}
-            className={[
-              "flex gap-1.5 text-xs leading-relaxed",
-              selected ? "text-slate-100" : "text-slate-300",
-            ].join(" ")}
+            className="flex gap-1.5 text-[11px] leading-snug text-slate-700"
           >
-            <span className="mt-0.5 shrink-0 text-sky-400" aria-hidden>
+            <span className="mt-0.5 shrink-0 text-sky-500" aria-hidden>
               •
             </span>
             <span>{p}</span>
@@ -934,21 +978,19 @@ function EnhanceFlavorPicker({
   onPick: (flavor: "natural" | "studio") => void;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       <p className="text-center text-xs font-semibold text-slate-700">
-        בחרו גרסה — כל כרטיס תמונה נפרדת
+        לחצו על תמונה לבחירה
       </p>
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-2 gap-2">
         <FlavorCard
           title="אותנטי וטבעי"
-          subtitle="ניקוי אור · שומר על הסביבה"
           imageUrl={naturalUrl}
           active={activeFlavor === "natural"}
           onClick={() => onPick("natural")}
         />
         <FlavorCard
           title="סטודיו מסחרי"
-          subtitle="רקע · תאורה · לוגו"
           imageUrl={studioUrl}
           active={activeFlavor === "studio"}
           onClick={() => onPick("studio")}
@@ -960,13 +1002,11 @@ function EnhanceFlavorPicker({
 
 function FlavorCard({
   title,
-  subtitle,
   imageUrl,
   active,
   onClick,
 }: {
   title: string;
-  subtitle: string;
   imageUrl: string;
   active: boolean;
   onClick: () => void;
@@ -977,10 +1017,10 @@ function FlavorCard({
       onClick={onClick}
       aria-pressed={active}
       className={[
-        "group overflow-hidden rounded-2xl text-right shadow-sm transition",
+        "group overflow-hidden rounded-xl text-right transition",
         active
-          ? "ring-2 ring-sky-500 border border-sky-400 bg-sky-500/10"
-          : "border border-slate-200 bg-white hover:border-sky-brand/50 hover:shadow-md",
+          ? "border-2 border-sky-400 ring-2 ring-sky-500"
+          : "border border-slate-200 bg-white hover:border-sky-brand/50",
       ].join(" ")}
     >
       <div className="relative aspect-square bg-slate-100">
@@ -988,15 +1028,12 @@ function FlavorCard({
           src={imageUrl}
           alt={title}
           fill
-          className="object-cover transition group-hover:scale-[1.02]"
+          className="object-cover object-center transition group-hover:scale-[1.02]"
           sizes="160px"
           unoptimized
         />
       </div>
-      <div className="space-y-0.5 px-2.5 py-2">
-        <p className="text-[12px] font-bold text-slate-900">{title}</p>
-        <p className="text-[10px] text-slate-500">{subtitle}</p>
-      </div>
+      <p className="px-2 py-1.5 text-[12px] font-bold text-slate-900">{title}</p>
     </button>
   );
 }
@@ -1020,10 +1057,10 @@ function ActionBtn({
       onClick={onClick}
       disabled={disabled}
       className={[
-        "inline-flex w-full items-center justify-center gap-2 rounded-xl px-3 py-3 text-[13px] font-bold no-underline transition disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+        "inline-flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold no-underline transition disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
         primary
-          ? "bg-gradient-to-b from-sky-brand to-sky-hover text-white shadow-[0_5px_0_0_#0369a1] hover:brightness-105 enabled:active:translate-y-[3px] enabled:active:shadow-[0_2px_0_0_#0369a1]"
-          : "border border-slate-200 bg-slate-100 text-slate-800 shadow-[0_3px_0_0_#cbd5e1] hover:border-sky-brand/50 hover:bg-sky-light hover:text-sky-brand enabled:active:translate-y-[2px] enabled:active:shadow-[0_1px_0_0_#cbd5e1]",
+          ? "bg-gradient-to-b from-sky-brand to-sky-hover text-white shadow-[0_4px_0_0_#0369a1] hover:brightness-105 enabled:active:translate-y-[2px] enabled:active:shadow-[0_2px_0_0_#0369a1]"
+          : "border border-slate-200 bg-slate-100 text-slate-800 shadow-[0_2px_0_0_#cbd5e1] hover:border-sky-brand/50 hover:bg-sky-light hover:text-sky-brand enabled:active:translate-y-[1px] enabled:active:shadow-[0_1px_0_0_#cbd5e1]",
       ].join(" ")}
     >
       {loading ? <Loader2 className="h-4 w-4 shrink-0 animate-spin" /> : null}

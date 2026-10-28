@@ -1,0 +1,1884 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "jachnun",
+      "keywords": [
+        "ג'חנון",
+        "גחנון",
+        "ג'חנון לשבת",
+        "גחנון של שבת",
+        "אוכל תימני",
+        "jachnun"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לשריון מארז לשבת",
+        "whatsapp": "שמור לי ג'חנון לשבת"
+      },
+      "falPrompt": "Authentic Yemenite Jewish Jachnun breakfast, golden-amber baked rolled pastry with glistening flaky dough layers, served on a plain wooden board beside a small ceramic bowl of fresh bright-red grated tomato salsa with olive oil, a small dish of green chili zhug, and a whole hard-boiled brown egg sliced cleanly in half showing a firm yellow cooked yolk, natural window lighting, real food photograph, 50mm f/2.8 macro, clean composition, unbranded, no stamps, no text",
+      "falNegative": "logs, cylinder, mahogany, sausage, fried egg, croissant, brioche, french pastry, bread bun, cinnamon roll, danish, swirl bun, bagel, text, watermark, stamp, sticker, badge",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "שבת שלום חברים! ☀️ הג'חנון החם מהתנור יחד עם רסק טרי, סחוג וביצה חומה כבר מחכה לכם. המארזים נחטפים, תענו כאן כדי לשריין לפני שייגמר 👇"
+    },
+    {
+      "id": "challah_schnitzel",
+      "keywords": [
+        "חלה עם שניצל",
+        "חלה של שישי",
+        "שניצל בחלה",
+        "שניצל שישי",
+        "כריך שניצל"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת חלה לשישי",
+        "whatsapp": "שריין לי חלה עם שניצל"
+      },
+      "falPrompt": "Fresh fluffy braided sweet challah bread cut open, loaded with thick crispy golden-brown breaded chicken schnitzels, fried glossy eggplant slices, deep red matbucha sauce dripping slightly, and spicy green chili, wrapped partially in brown parchment paper, appetizing commercial street food photography, warm studio lighting, 50mm lens, mouth-watering",
+      "falNegative": "burger bun, pita, cold meat, soggy bread, distorted food, raw chicken, watermark, text",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "שישי הגיע והריח באוויר! 🥖 חלה רכה של שישי עמוסה בשניצל חם וקריספי, מטבוחה ביתית וחצילים מטוגנים. מי רוצה שנשמור לו חלה לצהריים? ענו לי כאן 👇"
+    },
+    {
+      "id": "shakshuka",
+      "keywords": [
+        "שקשוקה",
+        "שקשוקה חריפה",
+        "שקשוקה עגבניות",
+        "שקשוקה בוקר"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת שולחן / משלוח",
+        "whatsapp": "הזמן מנה עכשיו"
+      },
+      "falPrompt": "Authentic bubbling hot shakshuka served inside a black cast-iron skillet, rich vibrant spiced red tomato and bell pepper stew, perfectly poached eggs with glistening runny yellow yolks, sprinkled with fresh chopped green parsley, served with fresh crusty bread on the side, Mediterranean breakfast photography, soft morning sunlight, 50mm f/2.8",
+      "falNegative": "omelet, scrambled eggs, extra yolks, burnt stew, dark, cold dish, plastic bowl, text",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "בוקר של שקשוקה חמה ורותחת ישר מהמחבת עם לחם טרי לניגוב! 🍳 פתחו שולחן או הזמינו משלוח חם ישירות מכאן 👇"
+    },
+    {
+      "id": "shawarma",
+      "keywords": [
+        "שווארמה",
+        "שווארמה פרגית",
+        "לאפה",
+        "שווארמה בלאפה",
+        "פיתה שווארמה"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לתפריט ומשלוחים",
+        "whatsapp": "הזמן מנה עכשיו"
+      },
+      "falPrompt": "Steaming hot Israeli shawarma sliced chicken and lamb shavings stuffed tightly into a soft open pita pocket, layered with velvety white tahini sauce dripping down, pickled cucumber, fresh parsley, and diced tomato-cucumber salad, authentic Tel Aviv street food photography, vibrant warm lighting, sharp focus on roasted meat textures",
+      "falNegative": "burger, kebab, dry meat, cold pita, taco, distorted food, text, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "השיפוד מסתובב והבשר עסיסי בטירוף! 🌯 שווארמה חמה בלאפה או פיתה עם טחינה שנוזלת מכל כיוון. להזמנה מהירה בוואטסאפ שלחו הודעה 👇"
+    },
+    {
+      "id": "sabich",
+      "keywords": [
+        "סביח",
+        "פיתה סביח",
+        "מנת סביח",
+        "חציל וביצה"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לתפריט ומשלוחים",
+        "whatsapp": "שריין לי מנה"
+      },
+      "falPrompt": "Puffy fresh pita bread stuffed to the brim with golden-brown fried eggplant slices, sliced brown hard-boiled egg, steamed potato cubes, drizzled generously with thick white tahini and bright yellow amba sauce, chopped fresh parsley, authentic Israeli street food photography, crisp focus, soft natural daylight",
+      "falNegative": "burger, meat sandwich, raw egg, deformed pita, text overlay, dark photography",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "החציל נמס, העמבה מדויקת והטחינה עוטפת הכל... 🥙 סביח חם ומושלם לארוחת צהריים. להזמנה לאיסוף או משלוח כתבו לנו כאן 👇"
+    },
+    {
+      "id": "bourekas",
+      "keywords": [
+        "בורקס",
+        "בורקס גבינה",
+        "בורקס תפוח אדמה",
+        "בורקס מים",
+        "בורקס פינוקים"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת מארז טרי",
+        "whatsapp": "שמור לי מארז בורקס"
+      },
+      "falPrompt": "Freshly baked golden puff pastry Israeli bourekas, delicate flaky butter pastry layers, generously covered with toasted sesame seeds, split open showing steaming savory cheese filling, hard-boiled egg and pickle slice, rustic bakery tray, warm cozy bakery morning lighting, macro food photography",
+      "falNegative": "sweet pastry, burnt seeds, flat bread, croissant, raw dough, text, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "התנור סיים עכשיו! 🥐 בורקסים פריכים עם ים שומשום וביצה חומה בצד. המגשים נחטפים – שריינו מארז חם בוואטסאפ עכשיו 👇"
+    },
+    {
+      "id": "falafel",
+      "keywords": [
+        "פלאפל",
+        "מנת פלאפל",
+        "כדורי פלאפל",
+        "פלאפל חם"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לתפריט ומשלוחים",
+        "whatsapp": "הזמן מנה עכשיו"
+      },
+      "falPrompt": "Warm open pita bread packed with crunchy golden-green deep-fried falafel balls, topped with creamy white tahini sauce, fresh finely diced Israeli cucumber-tomato salad, pickled pickles, and hot green zhug, authentic Israeli market food photography, high texture detail, appetizing, 50mm f/2.8",
+      "falNegative": "meatballs, dark burnt balls, raw pita, burger, deformed shapes, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "כדורים ירוקים שיוצאים עכשיו מהשמן, פיתה עננים והרבה טחינה! 🧆 בואו לאכול חם או שתזמינו לכם מנה בוואטסאפ כאן 👇"
+    },
+    {
+      "id": "malawach",
+      "keywords": [
+        "מלאווח",
+        "מלוואח",
+        "מלוח",
+        "מלאווח מגולגל"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת מנות חמות",
+        "whatsapp": "הזמן עכשיו בוואטסאפ"
+      },
+      "falPrompt": "Pan-fried golden-brown Yemenite malawach flatbread, crisp flaky outer ring with layered puff pastry texture, glistening with light butter, served with a dish of grated red tomato salsa and a brown hard-boiled egg, clean rustic table setting, appetizing morning light, 50mm lens",
+      "falNegative": "pancake, raw dough, burnt pastry, pizza, text, watermark, distorted food",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "פריך מבחוץ, רך מבפנים וטבול ברסק עגבניות טרי... 🥞 מלוואח חם מהמחבת מחכה לכם. להזמנה מהירה שלחו לנו הודעה 👇"
+    },
+    {
+      "id": "hummus",
+      "keywords": [
+        "חומוס",
+        "חומוס גרגירים",
+        "חומוס פול",
+        "מסבחה",
+        "משאוושה",
+        "חומוסיה"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת מארזים / שולחן",
+        "whatsapp": "הזמן מארז חומוס"
+      },
+      "falPrompt": "A wide ceramic bowl filled with freshly swirled warm smooth creamy hummus, topped with steaming whole chickpeas, olive oil puddle, sprinkle of red paprika and fresh chopped green parsley, served with fresh warm thick pita bread on the side, authentic Middle Eastern culinary photography, 50mm macro lens, natural diffused lighting",
+      "falNegative": "soup, salad, cold paste, meat chunks, messy plate, dark lighting, text overlay",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "חומוס חם וטרי שנטחן הרגע עם גרגירים רכים והמון שמן זית! 🥣 פיתות עבות וטריות מחכות לכם. שריינו מארז לסופ\"ש בוואטסאפ 👇"
+    },
+    {
+      "id": "rugelach",
+      "keywords": [
+        "רוגלך",
+        "רוגלך שוקולד",
+        "בבקה",
+        "מאפה שוקולד",
+        "שמרים שוקולד"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לשריון מארז מתוקים",
+        "whatsapp": "שמור לי מארז רוגלך"
+      },
+      "falPrompt": "A generous pile of freshly baked shiny mini chocolate rugelach pastries on baking paper, glossy sugar syrup coating, oozing rich melted dark chocolate swirls between thin flaky yeast dough layers, artisanal Jerusalem bakery atmosphere, warm mood lighting, appetizing macro photography, 50mm f/2.8",
+      "falNegative": "croissant, burnt pastry, dry cookies, plastic box, blurry, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "השוקולד עדיין חם ונוזל... 🍫 מגשי רוגלך שמרים שיצאו עכשיו מהתנור מחכים לכם לקפה של הבוקר. שריינו מארז לפני שייגמר 👇"
+    },
+    {
+      "id": "home_food_shabbat_market",
+      "keywords": [
+        "אוכל מוכן לשישי",
+        "אוכל ביתי לשבת",
+        "קייטרינג לשבת",
+        "יריד אוכל",
+        "שוק אוכל שישי",
+        "סלטים לשבת"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לתפריט סופ\"ש והזמנות",
+        "whatsapp": "שמור לי אוכל לשישי"
+      },
+      "falPrompt": "Bountiful Friday Shabbat food market buffet display, stainless steel warming trays and clay pots loaded with golden roasted chicken thighs, glazed sweet potatoes, vibrant red beet salad, Moroccan carrot salad, and fresh braided challah breads, warm market atmosphere, 35mm food editorial",
+      "falNegative": "cold food, plastic containers, messy cafeteria, empty trays, dark lighting, cartoon, text, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "למה לעמוד שעות במטבח בשישי? 🍲 יריד האוכל המוכן לשבת פתוח עם עשרות תבשילים ביתיים, סלטים טריים ומנות עיקריות מפנקות. צפו בתפריט השבועי ושריינו הזמנה בוואטסאפ 👇"
+    },
+    {
+      "id": "home_food_kubbeh",
+      "keywords": [
+        "קובה",
+        "קובה סלק",
+        "קובה חמוסטה",
+        "קובה דלעת",
+        "קובה נבלסיה",
+        "קובה מטוגנת",
+        "אוכל עיראקי"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת סיר קובה חם",
+        "whatsapp": "הזמן סיר קובה ביתי"
+      },
+      "falPrompt": "A deep traditional ceramic bowl filled with authentic Iraqi kubbeh beetroot soup, deep vibrant magenta broth, round semolina dumplings floating gently, steaming hot, tender beef filling visible inside a halved kubbeh, fresh celery leaf garnish, appetizing ethnic culinary photography, 50mm f/2.8",
+      "falNegative": "cold soup, broken dough, pale broth, messy spills, cartoon, text, logo, dark blur",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "ריח של קובה חמה מתבשלת בסיר... 🥣 קובה סלק עשיר, חמוסטה חמצמצה או קובה מטוגנת קראנצ'ית במילוי בשר מתובל. הסירים יוצאים עכשיו – שריינו מנות בוואטסאפ לפני שייגמר 👇"
+    },
+    {
+      "id": "home_food_chraime",
+      "keywords": [
+        "חריימה",
+        "דג מרוקאי",
+        "דגים חריפים",
+        "חריימה טריפוליטאי",
+        "דג לשבת",
+        "מושט חריף",
+        "לוקוס"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת דגים חריפים לשישי",
+        "whatsapp": "שמור לי מנת חריימה"
+      },
+      "falPrompt": "Authentic North African Israeli chraime fish stew bubbling in a traditional wide pan, thick tender fresh sea fish steaks simmered in a glistening rich deep-red spicy paprika, garlic, and cumin sauce, whole hot red peppers and fresh coriander garnish, warm rustic dining setting, 50mm f/2.8",
+      "falNegative": "burnt stew, pale watery sauce, raw fish, bones, messy dish, dark lighting, cartoon, text",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "הרוטב האדום, החריפות המדויקת והחלה שטובלים פנימה... 🐟 חריימה אסלי ודגים מרוקאים עשירים לשולחן שישי. המנות מוכנות לאיסוף – שריינו מנה מראש בוואטסאפ 👇"
+    },
+    {
+      "id": "home_food_chamin",
+      "keywords": [
+        "חמין",
+        "טשולנט",
+        "חמין לשבת",
+        "חמין בשרי",
+        "קיגל",
+        "טשולנט שישי בלילה",
+        "קוגל ירושלמי"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לשריון מנות חמין לסופ\"ש",
+        "whatsapp": "הזמן חמין חם לשבת"
+      },
+      "falPrompt": "Traditional overnight slow-cooked Jewish Shabbat chamin stew served in an authentic heavy Dutch oven pot, rich deep-brown caramelized beef chunks, tender potatoes, chickpeas, whole brown eggs, and savory kishke, steaming warm cozy atmosphere, authentic food photography, 50mm f/2.8",
+      "falNegative": "dry meat, burnt food, cold soup, watery broth, messy plate, dark, cartoon, text, watermark",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "סיר חמין לוהט שהתבשל כל הלילה עם בשר נימוח, ביצים חומות וקישקע חלומי! 🍲 פותחים סירים לסופ\"ש – שריינו מנות חמות לאיסוף בוואטסאפ כאן 👇"
+    },
+    {
+      "id": "home_food_stuffed_leaves",
+      "keywords": [
+        "ממולאים",
+        "עלי גפן",
+        "עלי גפן ממולאים",
+        "בצל ממולא",
+        "קישואים ממולאים",
+        "אוכל דרוזי",
+        "אוכל כורדי"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת סיר ממולאים ביתי",
+        "whatsapp": "שמור לי סיר ממולאים"
+      },
+      "falPrompt": "A large round copper serving platter arranged with delicate glossy green rolled stuffed grape leaves, alongside golden caramelized stuffed onions filled with seasoned rice and herbs, lemon wedges, drizzle of pomegranate molasses, appetizing Middle Eastern home cooking photography, 50mm lens",
+      "falNegative": "unraveling rolls, dry leaves, pale rice, burnt onions, messy plate, cartoon, text",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "עלי גפן דקיקים מגולגלים באהבה ובצלים ממולאים שנמסים בפה... 🌿 הכל טרי בעבודת יד מסורתית. הזמינו סיר חם לסופ\"ש ישירות בוואטסאפ 👇"
+    },
+    {
+      "id": "custom_cakes_bakery",
+      "keywords": [
+        "עוגות מעוצבות",
+        "עוגת יום הולדת",
+        "עוגת מספרים",
+        "עוגת שוקולד לילדים",
+        "עוגת בת מצווה",
+        "קינוחי כוסות"
+      ],
+      "category": "food",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "להזמנת עוגה מעוצבת",
+        "whatsapp": "תיאום עוגה לאירוע"
+      },
+      "falPrompt": "Stunning luxury multi-layer designer celebration cake on a white ceramic pedestal, silky smooth pastel cream frosting, decorated with fresh berries, delicate edible gold leaf accents, and fresh macarons, bright elegant boutique bakery lighting, commercial pastry photography, 50mm f/1.8",
+      "falNegative": "melted frosting, slanted lopsided cake, cheap plastic toys, messy counter, dark, cartoon, text",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "חוגגים יום הולדת או אירוע מיוחד? 🎂 עוגות מעוצבות בהתאמה אישית, קינוחי בוטיק וטעמים שכולם מדברים עליהם. שלחו תאריך ורעיון בוואטסאפ ונתחיל לתכנן 👇"
+    },
+    {
+      "id": "asado_bbq_catering",
+      "keywords": [
+        "אסאדו",
+        "קייטרינג בשרים",
+        "גרילמן",
+        "בשרים לעל האש",
+        "מעשנת בשרים",
+        "אירוע בשר",
+        "אנטרקוט"
+      ],
+      "category": "food",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "קביעת תור",
+        "לקבוע תור",
+        "פגישת ייעוץ",
+        "זימון פגישה"
+      ],
+      "cameraAngle": "50mm f/2.8 food editorial, shallow depth of field",
+      "timingTriggers": [
+        "שישי",
+        "שבת",
+        "סופ\"ש",
+        "בוקר"
+      ],
+      "toneKeywords": [
+        "חם",
+        "טרי",
+        "ביתי",
+        "מפתה"
+      ],
+      "cta": {
+        "instagram": "לקבלת הצעת מחיר לאירוע בשר",
+        "whatsapp": "תפריט והצעת מחיר לאסאדו"
+      },
+      "falPrompt": "Juicy thick slices of slow-smoked prime beef asado brisket resting on a large rustic wooden carving board, glistening pink smoke ring, coarse sea salt flakes and rosemary sprig, warm glowing ember coals in soft background, mouth-watering gourmet meat photography, 50mm f/2.8",
+      "falNegative": "dry overcooked meat, raw bloody puddle, burnt charcoal, dirty grill, cartoon, text, logo",
+      "waLeadTemplate": "היי, ראיתי את הפוסט - אפשר לשריין לי מארז / הזמנה?",
+      "sampleWhatsapp": "מתכננים יום הולדת, חגיגה בבית או אירוע חברה? 🥩 חוויית בשרים מהמעשנת, נתחים מובחרים וגרילמן שמפנק את האורחים מכל הלב. קבלו תפריט והצעת מחיר בוואטסאפ 👇"
+    },
+    {
+      "id": "garage_general_mechanic",
+      "keywords": [
+        "מוסך",
+        "מכונאות כללית",
+        "טיפול 10000",
+        "טיפול תקופתי",
+        "הכנה לטסט",
+        "בלמים",
+        "רפידות",
+        "מוסך רכב"
+      ],
+      "category": "automotive",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לתיאום טיפול והצעת מחיר",
+        "whatsapp": "תיאום טיפול לרכב"
+      },
+      "falPrompt": "Wide-angle shot of a bright modern auto garage interior, car raised on a hydraulic lift, tool carts and clean concrete floors, authentic automotive workshop, 35mm lens, natural light",
+      "falNegative": "dirty grease, oil leaks on floor, trashed junk yard, broken wrecked car, dark, blurry, cartoon, text, watermark",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "הגיע הזמן לטיפול תקופתי או שהטסט מתקרב? 🚗 בדיקת בלמים, שמנים ופילטרים במחיר הוגן וללא הפתעות. שלחו הודעה לתיאום הגעה מהיר בוואטסאפ 👇"
+    },
+    {
+      "id": "garage_body_paint",
+      "keywords": [
+        "פחחות וצבע",
+        "פחחות רכב",
+        "צביעת תנור",
+        "תיקון שפשוף",
+        "תיקון מעיכה",
+        "תיקון תאונה",
+        "פחח"
+      ],
+      "category": "automotive",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לקבלת הצעת מחיר מתמונה",
+        "whatsapp": "שלח תמונה לקבלת מחיר"
+      },
+      "falPrompt": "Pristine automotive spray paint oven booth, high-gloss freshly painted metallic car fender reflecting clean continuous bright fluorescent light tubes, flawless mirror-like finish, professional automotive craftsmanship, commercial studio shot, 50mm f/2.8",
+      "falNegative": "scratches, dents, dust, uneven paint, dirty shop, overspray, cartoon, watermark, text",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "שפשפו לכם את הרכב בחניה או שיש מעיכה מעצבנת? 🚙 צלמו לנו עכשיו בוואטסאפ את הנזק וקבלו הצעת מחיר מדויקת לתיקון פחחות וצבע בתנור תוך דקות 👇"
+    },
+    {
+      "id": "garage_electrical_ac",
+      "keywords": [
+        "חשמלאות רכב",
+        "דיאגנוסטיקה",
+        "מיזוג אוויר לרכב",
+        "מילוי גז למזגן",
+        "מצברים",
+        "אלטרנטור",
+        "נורת מנוע"
+      ],
+      "category": "automotive",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לבדיקת דיאגנוסטיקה ומזגן",
+        "whatsapp": "בדיקת מיזוג וחשמל"
+      },
+      "falPrompt": "Modern automotive diagnostic service station, technician connecting a glowing digital diagnostic tablet scanner to a premium vehicle dashboard, clean engine bay under bright directed studio spotlight, high-tech automotive precision, crisp 35mm lens",
+      "falNegative": "messy loose wires, smoking engine, broken windshield, dark garage, text, logo, cartoon",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "המזגן מוציא אוויר פושר או שנדלקה נורת מנוע בלוח השעונים? ❄️ איתור תקלות ממוחשב ומילוי גז למזגן עם אחריות מלאה. תאמו בדיקה כאן 👇"
+    },
+    {
+      "id": "garage_vag_specialist",
+      "keywords": [
+        "מוסך מתמחה צ'מפיון",
+        "מוסך ואג",
+        "מוסך VAG",
+        "סיאט",
+        "סקודה",
+        "פולקסווגן",
+        "אאודי",
+        "מוסך מומחה גרמניות",
+        "גיר DSG"
+      ],
+      "category": "automotive",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לתיאום בדיקה לרכבי VAG",
+        "whatsapp": "בדיקת רכבי VAG"
+      },
+      "falPrompt": "High-end specialized independent European automotive workshop, modern Volkswagen and Seat hatchbacks parked neatly inside a spotless epoxy-floor service bay, German diagnostic equipment, crisp architectural studio lighting, editorial automotive style, 35mm lens",
+      "falNegative": "dirty garage, oil spills, broken parts, cluttered floor, cartoon, text overlay, generic Asian cars",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "נוהגים בסיאט, סקודה, פולקסווגן או אאודי? 🏎️ טיפולים, דיאגנוסטיקה מורחבת וטיפול בגיר DSG ברמת יבואן ובמחיר של מוסך מתמחה. שלחו הודעה לקביעת מועד 👇"
+    },
+    {
+      "id": "garage_detailing",
+      "keywords": [
+        "דיטיילינג",
+        "ציפוי ננו קרמי",
+        "פוליש לרכב",
+        "חידוש פנסים",
+        "שטיפה ידנית",
+        "ניקוי ריפודים"
+      ],
+      "category": "automotive",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לשריון מקום לדיטיילינג",
+        "whatsapp": "תיאום פוליש וציפוי"
+      },
+      "falPrompt": "Extreme macro close-up of a deep black sports car hood treated with ceramic coating, perfect water beading droplets rolling off the ultra-hydrophobic reflective surface, warm sunset studio reflections, luxurious automotive detailing photography, 50mm f/1.8",
+      "falNegative": "swirl marks, dirty water spots, dull paint, blurry, cheap car wash, text, watermark",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "רוצים שהרכב ינצוץ כמו ביום שהוא יצא מהחברה? ✨ פוליש רב-שלבי, ציפוי ננו קרמי וחידוש פנימי מקיף. נותרו מקומות אחרונים לשבוע הבא – דברו איתנו בוואטסאפ 👇"
+    },
+    {
+      "id": "tires_puncture",
+      "keywords": [
+        "פנצ'ריה",
+        "צמיגים",
+        "החלפת צמיג",
+        "תיקון תקר",
+        "איזון גלגלים",
+        "צמיגי מישלן",
+        "ג'אנטים"
+      ],
+      "category": "automotive",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "קרואסון",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm automotive commercial, crisp workshop light",
+      "timingTriggers": [
+        "טסט",
+        "טיפול תקופתי",
+        "חורף"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "הוגן",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לבדיקת מחיר צמיגים",
+        "whatsapp": "בדיקת מידות צמיג"
+      },
+      "falPrompt": "Modern clean tire shop showroom, brand new deep-tread black rubber automotive tires stacked symmetrically on clean industrial steel display racks, dynamic rim balancing machine in soft background blur, crisp commercial lighting, 35mm lens",
+      "falNegative": "worn out tires, messy oily shop, flat tire on dirt road, dark, cartoon, text, logo",
+      "waLeadTemplate": "היי, אשמח לתיאום / הצעת מחיר לרכב.",
+      "sampleWhatsapp": "הצמיגים יבשים או שנתקעתם עם פנצ'ר? 🛞 צמיגים טריים של המותגים המובילים במבצעי זוגות ורביעיות כולל איזון והרכבה. שלחו לנו מידת צמיג בוואטסאפ לקבלת מחיר 👇"
+    },
+    {
+      "id": "plumber_drainage",
+      "keywords": [
+        "אינסטלטור",
+        "פתיחת סתימות",
+        "איתור נזילות",
+        "מצלמה תרמית",
+        "החלפת צנרת",
+        "לחץ מים",
+        "ביוב"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לקריאה מהירה והצעת מחיר",
+        "whatsapp": "הזמן אינסטלטור עכשיו"
+      },
+      "falPrompt": "Modern luxury bathroom with high-end polished chrome sink faucet, crystal-clear water flowing smoothly, clean marble countertop, professional plumbing diagnostic equipment placed neatly beside a toolkit, architectural commercial photography, bright crisp lighting, 35mm lens",
+      "falNegative": "dirty clogged toilet, messy sewer water, broken tiles, dark blurry room, cartoon, text, watermark",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "נזילה בתקרה, סתימה שלא נפתחת או לחץ מים חלש? 🔧 איתור תקלות במצלמה תרמית ללא הרס ופתרון מהיר מהשורש. לחצו כאן לשליחת הודעה והגעה מהירה 👇"
+    },
+    {
+      "id": "electrician_certified",
+      "keywords": [
+        "חשמלאי מוסמך",
+        "קצר חשמלי",
+        "הגדלה לתלת פאזי",
+        "לוח חשמל",
+        "התקנת גופי תאורה",
+        "עמדת טעינה לרכב"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לייעוץ והתקנה מקצועית",
+        "whatsapp": "תיאום חשמלאי מוסמך"
+      },
+      "falPrompt": "Modern residential electrical breaker panel, perfectly organized and aligned colorful safety breakers, precision installation work, neat cable management, bright clean lighting, licensed electrician testing with a digital multimeter in crisp focus, 50mm f/2.8",
+      "falNegative": "burning sparks, messy tangled wires, fire hazard, dark basement, cartoon, text, watermark",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "צריכים התקנת עמדת טעינה לרכב חשמלי, החלפת לוח לתלת-פאזי או טיפול בקצר? ⚡ עבודה בטוחה עם רישיון חשמלאי מוסמך ואחריות מלאה. לתיאום שלחו הודעה 👇"
+    },
+    {
+      "id": "solar_water_heater",
+      "keywords": [
+        "דודי שמש",
+        "דוד חשמל",
+        "החלפת פלאנג'",
+        "תיקון דוד שמש",
+        "קולט שמש",
+        "אין מים חמים",
+        "כרומגן"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "להחלפה ותיקון דוד שמש",
+        "whatsapp": "בדיקת דוד שמש"
+      },
+      "falPrompt": "Sunny Mediterranean rooftop overlooking a clean urban cityscape, gleaming white solar water heater tank with clear blue glass solar collector panels tilted towards the bright morning sun, professional installation, clean crisp architectural photography, 35mm lens",
+      "falNegative": "rusted broken tank, leaking roof, cloudy dark storm, dirty bird droppings, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "המים בדוד לא מתחממים או שהדוד מקצר ומטפטף? ☀️ החלפת פלאנג', גוף חימום והתקנת דודי שמש עם אספקת מים חמים שופעת. דברו איתנו בוואטסאפ להגעה מהירה 👇"
+    },
+    {
+      "id": "handyman_services",
+      "keywords": [
+        "הנדימן",
+        "הרכבת רהיטים",
+        "הרכבת איקאה",
+        "תליית טלוויזיה",
+        "תיקונים קטנים לבית",
+        "התקנת מדפים"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לסגירת תיקונים לבית",
+        "whatsapp": "הזמן הנדימן לבית"
+      },
+      "falPrompt": "Bright minimalist living room wall, sleek 65-inch flat screen TV perfectly mounted level on wall, no visible wires, a clean wooden shelf mounted below with small potted succulent, organized cordless drill on a clean drop cloth, lifestyle interior home improvement photography, 35mm lens",
+      "falNegative": "crooked shelves, holes in wall, dangling messy cables, trashed room, cartoon, text, logo",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "קניתם רהיטים באיקאה? צריכים תליית טלוויזיה, גופי תאורה או תיקונים קטנים שנמרחים חודשים? 🔨 הנדימן זריז, יסודי ונקי. שלחו רשימת עבודות בוואטסאפ וקבלו מחיר 👇"
+    },
+    {
+      "id": "renovation_contractor",
+      "keywords": [
+        "שיפוצים",
+        "קבלן שיפוצים",
+        "שיפוץ אמבטיה",
+        "עבודות גבס",
+        "ריצוף",
+        "שבירת קירות",
+        "שיפוץ דירה"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לקבלת הצעת מחיר לפרויקט",
+        "whatsapp": "פגישת ייעוץ לשיפוץ"
+      },
+      "falPrompt": "Masterpiece newly renovated open-space apartment, seamless large-format porcelain tiles on floor, modern recessed ceiling with hidden warm LED strip lighting, flawless smooth plastered walls, high-end interior architecture design photography, 24mm wide angle, natural daylight",
+      "falNegative": "dusty debris, unfinished drywall, broken bricks, paint splatters on floor, dark, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "מתכננים לשפץ את הדירה או לחדש את חדר הרחצה? 🏗️ עבודה מדויקת לפי תוכניות אדריכליות, עמידה קשיחה בלוחות זמנים ורמת גימור ללא פשרות. לתיאום פגישה בדירה לחצו כאן 👇"
+    },
+    {
+      "id": "house_painter",
+      "keywords": [
+        "צבעי",
+        "צביעת דירה",
+        "צביעת בית",
+        "שפכטל אמריקאי",
+        "תיקון סדקים",
+        "צבע סיד",
+        "צביעה לפני מעבר"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "להצעת מחיר לצביעת דירה",
+        "whatsapp": "קבל הצעת מחיר לצביעה"
+      },
+      "falPrompt": "Spacious sun-drenched empty living room with freshly painted flawless matte off-white walls, crisp clean lines at baseboards, clean hardwood parquet floor, natural light streaming through large balcony doors, architectural magazine photography, 35mm lens",
+      "falNegative": "dripping paint, peeling wallpaper, cracked ceiling, dirty painter clothes, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "נכנסים לדירה חדשה או רוצים לרענן את הבית עם צבע חלק ולבן? 🎨 צביעה נקייה ויסודית כולל תיקוני שפכטל וכיסוי מוקפד של הרהיטים והרצפה. שלחו גודל דירה בוואטסאפ לקבלת מחיר 👇"
+    },
+    {
+      "id": "ac_technician",
+      "keywords": [
+        "טכנאי מזגנים",
+        "התקנת מזגן",
+        "מזגן אינוורטר",
+        "מזגן לא מקרר",
+        "ניקוי עמוק למזגן",
+        "מזגן VRF"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "להזמנת טכנאי והתקנה",
+        "whatsapp": "תיאום טכנאי מזגנים"
+      },
+      "falPrompt": "Sleek modern matte-white split air conditioner mounted flush on a contemporary apartment wall, refreshing subtle mist visualization representing cool clean airflow, spotless interior environment, minimalist editorial photography, 35mm lens",
+      "falNegative": "leaking dripping water, dirty black mold on plastic, open wires, yellow aged plastic, text, cartoon",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "המזגן מטפטף, מרעיש או לא מקרר כמו שצריך? ❄️ התקנת מזגנים חדשים, מילוי גז ותיקון תקלות מהיר. אל תישארו בחום – שלחו הודעה להזמנת טכנאי עכשיו 👇"
+    },
+    {
+      "id": "locksmith_emergency",
+      "keywords": [
+        "מנעולן",
+        "פורץ מנעולים",
+        "החלפת צילינדר",
+        "פריצת דלת",
+        "מנעול רב בריח",
+        "תיקון דלת כניסה"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לקריאה דחופה 24/7",
+        "whatsapp": "קריאה למנעולן עכשיו"
+      },
+      "falPrompt": "High-security modern steel entrance door, pristine satin nickel smart cylinder lock being fitted with brand new precision brass keys, macro commercial architectural photography, warm entry foyer lighting, crisp focus, 50mm f/2.8",
+      "falNegative": "crowbar damage, scratched broken door, criminal mask, dark, blurry, cartoon, text, logo",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "המפתח נתקע במנעול, נטרקה הדלת או שצריכים החלפת צילינדר בדירה חדשה? 🔑 מנעולן מורשה עם הגעה תוך 20 דקות. צרו קשר מיידי בוואטסאפ 👇"
+    },
+    {
+      "id": "pest_control",
+      "keywords": [
+        "הדברה",
+        "הדברת מזיקים",
+        "הדברת ג'וקים",
+        "הדברת נמלים",
+        "הדברה ירוקה",
+        "הדברת פשפש המיטה"
+      ],
+      "category": "home_services",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "תפריט",
+        "טעימות"
+      ],
+      "cameraAngle": "35mm architectural / service photography",
+      "timingTriggers": [
+        "דחוף",
+        "חגים",
+        "מעבר דירה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מהיר",
+        "אמין"
+      ],
+      "cta": {
+        "instagram": "לתיאום הדברה ירוקה לבית",
+        "whatsapp": "הזמנת הדברה עם אחריות"
+      },
+      "falPrompt": "Spotless sunny modern kitchen, clean sparkling floor tiles, fresh lemons and green herbs in a bowl on counter, subtle ecological green leaf icon aura, symbolizing safe organic green pest control, bright natural light, commercial home safety photography, 35mm lens",
+      "falNegative": "visible cockroaches, dead bugs, chemical skull signs, dirty kitchen, gas mask, dark, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לקבל הצעת מחיר / תיאום הגעה?",
+      "sampleWhatsapp": "הקיץ התחיל והנמלים והג'וקים מגיעים לביקור? 🐜 הדברה ירוקה ללא ריח, בטוחה לילדים ולבעלי חיים, כולל תעודת אחריות בכתב. שריינו תור בוואטסאפ לפני שיתחמם 👇"
+    },
+    {
+      "id": "medical_pedicure_nails",
+      "keywords": [
+        "פדיקור רפואי",
+        "ציפורן חודרנית",
+        "פטרת ציפורניים",
+        "טיפול בכף הרגל",
+        "סדקים בעקבים",
+        "פדיקוריסטית"
+      ],
+      "category": "beauty",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "תפריט משלוחים",
+        "הזמנה למשלוח אוכל"
+      ],
+      "cameraAngle": "35mm commercial beauty, soft ring light",
+      "timingTriggers": [
+        "סופ\"ש",
+        "ערב חג"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מדויק",
+        "מפנק"
+      ],
+      "cta": {
+        "instagram": "לבדיקה ותיאום טיפול רפואי",
+        "whatsapp": "תיאום תור לפדיקור"
+      },
+      "falPrompt": "Pristine clinical medical pedicure spa suite, sterile stainless steel tools displayed on white tray, soft plush spa chair, clean calming wellness atmosphere, white towels and soothing aromatic foot bath, professional aesthetic healthcare photography, 35mm lens",
+      "falNegative": "infected gross skin, bloody tools, messy floor, dark room, cartoon, text, watermark",
+      "waLeadTemplate": "היי, אפשר לבדוק זמינות ולקבוע תור?",
+      "sampleWhatsapp": "סובלים מציפורן חודרנית, יובש קיצוני או סדקים מציקים? 🩺 פדיקור רפואי מקצועי, סטרילי ועדין שיחזיר לכם את הנוחות בכל צעד. לתיאום תור פרטי שלחו הודעה בוואטסאפ 👇"
+    },
+    {
+      "id": "eyebrow_lash_styling",
+      "keywords": [
+        "עיצוב גבות",
+        "הרמת ריסים",
+        "מיקרובליידינג",
+        "הרמת גבות",
+        "איפור קבוע",
+        "הלחמת ריסים"
+      ],
+      "category": "beauty",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "תפריט משלוחים",
+        "הזמנה למשלוח אוכל"
+      ],
+      "cameraAngle": "35mm commercial beauty, soft ring light",
+      "timingTriggers": [
+        "סופ\"ש",
+        "ערב חג"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "מדויק",
+        "מפנק"
+      ],
+      "cta": {
+        "instagram": "לתיאום תור לעיצוב גבות",
+        "whatsapp": "שריון תור לגבות וריסים"
+      },
+      "falPrompt": "Extreme macro beauty portrait of a woman's perfectly shaped natural feathery eyebrows and long curled lush black eyelashes, clean glowing skin, soft studio ring-light reflection in eyes, high-end commercial beauty editorial photography, 85mm f/2.0",
+      "falNegative": "fake cartoon eyelashes, messy brows, deformed eye, smudged makeup, blurry, text, watermark",
+      "waLeadTemplate": "היי, אפשר לבדוק זמינות ולקבוע תור?",
+      "sampleWhatsapp": "הגבות והריסים שלכן צריכים רענון לפני הסופ\"ש? ✨ הרמת ריסים טבעית ועיצוב גבות מדויק שממסגר את הפנים מושלם. לחצו כאן לשריין מקום פנוי בוואטסאפ 👇"
+    },
+    {
+      "id": "real_estate_lawyer",
+      "keywords": [
+        "עורך דין מקרקעין",
+        "חוזה דירה",
+        "קניית דירה מקבלן",
+        "הסכם שכירות",
+        "עו\"ד נדל\"ן",
+        "מיסוי מקרקעין",
+        "טאבו"
+      ],
+      "category": "legal_finance",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm corporate trustworthy photography",
+      "timingTriggers": [
+        "ייעוץ",
+        "חוזה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "דיסקרטי",
+        "מדויק"
+      ],
+      "cta": {
+        "instagram": "לייעוץ ובדיקת חוזה נדל\"ן",
+        "whatsapp": "בדיקת חוזה רכישה/שכירות"
+      },
+      "falPrompt": "Modern prestigious law firm conference room, polished dark walnut table with a leather document portfolio, sleek gold executive pen, sunlit panoramic city skyline visible through floor-to-ceiling glass windows, confident trustworthy corporate photography, 35mm lens",
+      "falNegative": "gavel, cartoon scales of justice, dusty library, messy papers, dark lighting, text overlay",
+      "waLeadTemplate": "היי, אשמח לייעוץ ראשוני.",
+      "sampleWhatsapp": "עומדים לחתום על קניית דירה, מכירה או הסכם שכירות? 📑 ליווי משפטי צמוד שיגן על הכסף שלכם וימנע הפתעות מול הקבלן או המוכר. שלחו הודעה לייעוץ ראשוני מהיר בוואטסאפ 👇"
+    },
+    {
+      "id": "labor_lawyer",
+      "keywords": [
+        "עורך דין דיני עבודה",
+        "פיטורין שלא כדין",
+        "שימוע",
+        "פיצויי פיטורין",
+        "הרעת תנאים",
+        "עו\"ד עבודה"
+      ],
+      "category": "legal_finance",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm corporate trustworthy photography",
+      "timingTriggers": [
+        "ייעוץ",
+        "חוזה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "דיסקרטי",
+        "מדויק"
+      ],
+      "cta": {
+        "instagram": "לבדיקת זכויות עובדים",
+        "whatsapp": "ייעוץ דיני עבודה ושימוע"
+      },
+      "falPrompt": "Professional attorney consulting desk, high-end warm minimalist office interior, neat legal documents in a folder, elegant reading lamp, professional trustworthy business ambiance, 50mm f/2.8",
+      "falNegative": "handcuffs, jail bars, messy desk, screaming boss, cartoon, text, logo",
+      "waLeadTemplate": "היי, אשמח לייעוץ ראשוני.",
+      "sampleWhatsapp": "קיבלתם זימון לשימוע או שפוטרתם ללא תשלום מלוא הזכויות והפיצויים? ⚖️ בדיקת זכויות מקצועית וליווי מדויק שישמור על האינטרסים שלכם. לשיחת ייעוץ דיסקרטית בוואטסאפ לחצו כאן 👇"
+    },
+    {
+      "id": "accountant_tax_advisor",
+      "keywords": [
+        "רואה חשבון",
+        "יועץ מס",
+        "פתיחת עוסק מורשה",
+        "פתיחת עוסק פטור",
+        "דוח שנתי",
+        "החזרי מס",
+        "הנהלת חשבונות"
+      ],
+      "category": "legal_finance",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "מארז",
+        "תפריט"
+      ],
+      "cameraAngle": "35mm corporate trustworthy photography",
+      "timingTriggers": [
+        "ייעוץ",
+        "חוזה"
+      ],
+      "toneKeywords": [
+        "מקצועי",
+        "דיסקרטי",
+        "מדויק"
+      ],
+      "cta": {
+        "instagram": "לפתיחת תיק ובדיקת החזרי מס",
+        "whatsapp": "ייעוץ מס ופתיחת עסק"
+      },
+      "falPrompt": "Modern clean accounting office workspace, sleek laptop displaying colorful financial growth graphs, clean desk, wireless mouse, small green plant, warm sunlit professional atmosphere, modern financial advisory photography, 35mm lens",
+      "falNegative": "cluttered paper receipts, old dusty calculator, stressed businessman, cartoon, text overlay",
+      "waLeadTemplate": "היי, אשמח לייעוץ ראשוני.",
+      "sampleWhatsapp": "רוצים לפתוח עוסק פטור/מורשה או לבדוק אם מגיע לכם החזר מס של אלפי שקלים מהמדינה? 💼 ליווי פיננסי שחוסך לכם כסף ובירוקרטיה. שלחו הודעה בוואטסאפ לבדיקה ללא התחייבות 👇"
+    },
+    {
+      "id": "private_tutor_math",
+      "keywords": [
+        "מורה פרטי למתמטיקה",
+        "הכנה לבגרות",
+        "בגרות 4 יחידות",
+        "בגרות 5 יחידות",
+        "שיעור פרטי",
+        "מתמטיקה לחטיבה"
+      ],
+      "category": "education",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "תפריט"
+      ],
+      "cameraAngle": "50mm calm study desk photography",
+      "timingTriggers": [
+        "מבחן",
+        "בגרות"
+      ],
+      "toneKeywords": [
+        "סבלני",
+        "ברור",
+        "תומך"
+      ],
+      "cta": {
+        "instagram": "לתיאום שיעור ניסיון במתמטיקה",
+        "whatsapp": "בדיקת זמנים לשיעור פרטי"
+      },
+      "falPrompt": "Bright inspiring study desk, neat spiral notebook with clean hand-written geometric diagrams, sleek graphite pencil, scientific calculator, warm natural window light streaming across wood desk, productive calm learning atmosphere, 50mm f/2.8",
+      "falNegative": "frustrated crying student, messy crumpled papers, dark room, chalkboard dust, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לתאם שיעור ניסיון?",
+      "sampleWhatsapp": "המבחן במתמטיקה מתקרב והחומר לא יושב טוב? 📐 לימוד בסבלנות, בשיטות פשוטות שמפרקות כל תרגיל ובגובה העיניים (חטיבה ותיכון 3-5 יח\"ל). תאמו שיעור ניסיון בוואטסאפ עכשיו 👇"
+    },
+    {
+      "id": "toy_store",
+      "keywords": [
+        "חנות צעצועים",
+        "משחקי קופסה",
+        "לגו",
+        "בובות",
+        "מתנות ליום הולדת",
+        "צעצועי התפתחות",
+        "יצירה לילדים"
+      ],
+      "category": "retail",
+      "intent": "product_inquiry",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור"
+      ],
+      "cameraAngle": "28-35mm retail commercial interior",
+      "timingTriggers": [
+        "מבצע",
+        "סופ\"ש"
+      ],
+      "toneKeywords": [
+        "מלאי",
+        "ייעוץ",
+        "שירות"
+      ],
+      "cta": {
+        "instagram": "למשחקים ומבצעי החודש",
+        "whatsapp": "בדיקת מלאי מתנות ומשחקים"
+      },
+      "falPrompt": "Vibrant, clean boutique toy store interior, beautifully organized wooden shelves filled with colorful premium educational building blocks, friendly plush teddy bears, and quality board games, bright happy warm lighting, commercial retail photography, 35mm lens",
+      "falNegative": "cluttered messy aisles, broken toys, dark scary store, plastic garbage, cartoon, text, logo",
+      "waLeadTemplate": "היי, אפשר לבדוק מלאי / מחיר?",
+      "sampleWhatsapp": "מחפשים מתנה מושלמת ליום הולדת, ערכת לגו חדשה או משחק קופסה שינתק את הילדים מהמסכים? 🧸 אריזות מתנה מהודרות ומשלוח מהיר. שלחו הודעה לבדיקת מלאי בוואטסאפ 👇"
+    },
+    {
+      "id": "flower_shop",
+      "keywords": [
+        "חנות פרחים",
+        "זר פרחים",
+        "משלוח פרחים",
+        "עציצים",
+        "זר כלה",
+        "סידורי פרחים",
+        "פרחים לשבת"
+      ],
+      "category": "retail",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור"
+      ],
+      "cameraAngle": "28-35mm retail commercial interior",
+      "timingTriggers": [
+        "מבצע",
+        "סופ\"ש"
+      ],
+      "toneKeywords": [
+        "מלאי",
+        "ייעוץ",
+        "שירות"
+      ],
+      "cta": {
+        "instagram": "להזמנת משלוח פרחים טרי",
+        "whatsapp": "הזמן זר פרחים עכשיו"
+      },
+      "falPrompt": "Stunning artisanal floral boutique studio, florist worktable filled with fresh cut eucalyptus sprigs, delicate white peonies, pastel pink roses, and natural craft paper wrapping, soft diffused morning studio daylight, high-end botanical lifestyle photography, 50mm f/1.8",
+      "falNegative": "wilted dead brown flowers, plastic artificial flowers, messy floor, dark, cartoon, text, logo",
+      "waLeadTemplate": "היי, אפשר לבדוק מלאי / מחיר?",
+      "sampleWhatsapp": "רוצים לפנק מישהו שאוהבים או להכניס ריח של שבת הביתה? 🌸 זרי פרחים טריים ועציצים מעוצבים שנשזרים באהבה עם משלוח מהיר עד הדלת. להזמנה זריזה בוואטסאפ לחצו כאן 👇"
+    },
+    {
+      "id": "pet_shop_grooming",
+      "keywords": [
+        "חנות חיות",
+        "מספרת כלבים",
+        "מזון לכלבים",
+        "אוכל לחתולים",
+        "חטיפים לכלבים",
+        "טיפוח כלבים",
+        "רצועה לכלב"
+      ],
+      "category": "retail",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור"
+      ],
+      "cameraAngle": "28-35mm retail commercial interior",
+      "timingTriggers": [
+        "מבצע",
+        "סופ\"ש"
+      ],
+      "toneKeywords": [
+        "מלאי",
+        "ייעוץ",
+        "שירות"
+      ],
+      "cta": {
+        "instagram": "למבצעי מזון ותספורות",
+        "whatsapp": "הזמנת שק אוכל / תור לתספורת"
+      },
+      "falPrompt": "Adorable, happy well-groomed Golden Retriever puppy sitting comfortably inside a bright modern pet boutique, shiny glossy golden coat, clean wooden display shelves of premium pet accessories in soft background, cheerful lifestyle commercial photography, 50mm f/2.0",
+      "falNegative": "dirty matted fur, aggressive barking dog, cage, messy shop, dark, cartoon, text, watermark",
+      "waLeadTemplate": "היי, אפשר לבדוק מלאי / מחיר?",
+      "sampleWhatsapp": "נגמר השק של האוכל או שהכלב חייב תספורת וטיפוח מקצועי? 🐾 שקי מזון פרימיום עם משלוח חינם עד הבית ומספרת כלבים באווירה רגועה. שלחו הודעה להזמנה ותיאום תור 👇"
+    },
+    {
+      "id": "spices_nuts_market",
+      "keywords": [
+        "חנות תבלינים",
+        "פיצוחים",
+        "פירות יבשים",
+        "קטניות",
+        "פיצוחים קלויים",
+        "תבלינים מיוחדים",
+        "תמרים"
+      ],
+      "category": "retail",
+      "intent": "order_reserve",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור"
+      ],
+      "cameraAngle": "28-35mm retail commercial interior",
+      "timingTriggers": [
+        "מבצע",
+        "סופ\"ש"
+      ],
+      "toneKeywords": [
+        "מלאי",
+        "ייעוץ",
+        "שירות"
+      ],
+      "cta": {
+        "instagram": "למארזי פיצוחים ותבלינים",
+        "whatsapp": "הזמנת פיצוחים ותבלינים"
+      },
+      "falPrompt": "Authentic Mediterranean spice bazaar market stall, rustic burlap sacks and carved olive wood bowls filled with colorful fragrant mounds of golden turmeric, deep red sumac, freshly roasted glistening cashews, and almonds, warm ambient lighting, rich textures, 50mm f/2.8",
+      "falNegative": "plastic pre-packaged bags, dusty dirty floor, pale spices, dark shadows, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לבדוק מלאי / מחיר?",
+      "sampleWhatsapp": "פיצוחים טריים שנקלו הרגע ותבלינים טהורים בריח משכר שישדרג כל תבשיל! 🥜 מארזים טריים לפיצוח של שישי וסופי שבוע. הזמינו משלוח מהיר עד פתח הבית בוואטסאפ 👇"
+    },
+    {
+      "id": "phone_repair_lab",
+      "keywords": [
+        "מעבדת סלולר",
+        "תיקון אייפון",
+        "החלפת מסך",
+        "החלפת סוללה",
+        "תיקון סמסונג",
+        "חנות טלפונים",
+        "מגן מסך"
+      ],
+      "category": "retail",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור"
+      ],
+      "cameraAngle": "28-35mm retail commercial interior",
+      "timingTriggers": [
+        "מבצע",
+        "סופ\"ש"
+      ],
+      "toneKeywords": [
+        "מלאי",
+        "ייעוץ",
+        "שירות"
+      ],
+      "cta": {
+        "instagram": "להצעת מחיר לתיקון מסך",
+        "whatsapp": "בדיקת מחיר תיקון סלולר"
+      },
+      "falPrompt": "High-tech clean smartphone repair workbench, a technician using precision anti-static screwdrivers next to a brand new illuminated pristine OLED replacement screen, organized micro-tools on a silicone work mat, bright white lab lighting, 50mm f/2.8 macro",
+      "falNegative": "shattered glass shards everywhere, burnt motherboard, dirty hands, dark room, cartoon, text",
+      "waLeadTemplate": "היי, אפשר לבדוק מלאי / מחיר?",
+      "sampleWhatsapp": "המסך נשבר, הסוללה נגמרת תוך שעתיים או שהשקע טעינה לא מגיב? 📱 תיקון מקצועי עם חלפים איכותיים במקום תוך 30-45 דקות ואחריות מלאה. שלחו דגם מכשיר לקבלת מחיר בוואטסאפ 👇"
+    },
+    {
+      "id": "babysitter_nanny",
+      "keywords": [
+        "בייביסיטר",
+        "מטפלת",
+        "שמרטפית",
+        "השגחה על ילדים",
+        "בייביסיטר לשעות הערב",
+        "אומנת"
+      ],
+      "category": "childcare",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "משלוח",
+        "טיפול רכב",
+        "סיר",
+        "קראנצ'י",
+        "הצעת מחיר לפרויקט"
+      ],
+      "cameraAngle": "warm eye-level medium shot",
+      "timingTriggers": [
+        "חמישי בערב",
+        "סופ\"ש",
+        "חופש גדול",
+        "חגים",
+        "שעת חירום"
+      ],
+      "toneKeywords": [
+        "אחראית",
+        "עם המלצות",
+        "סבלנית",
+        "חמה",
+        "ניסיון עשיר",
+        "שקט נפשי"
+      ],
+      "cta": {
+        "instagram": "לבדיקת זמינות לבייביסיטר",
+        "whatsapp": "בדיקת שעות פנויות"
+      },
+      "falPrompt": "Bright sunlit modern children's playroom, warm wooden shelves with organized wooden Scandinavian toys, colorful soft cushions, safe cozy domestic environment, gentle morning window light, high-end family lifestyle photography, 35mm lens, depth of field",
+      "falNegative": "distorted faces, creepy children, messy trashed room, dark shadows, scary lighting, text, watermark, logo",
+      "waLeadTemplate": "היי [שם], ראיתי את הפרסום לגבי שירותי בייביסיטר. יש לך זמינות לערב ביום [יום] לשעות [שעות]?",
+      "sampleWhatsapp": "הורים יקרים, מתכננים יציאה בסופ\"ש או צריכים עזרה עם הקטנים אחה\"צ? 🧸 בייביסיטר אחראית, סבלנית ועם שפע המלצות חמות. מקומות פנויים לשבוע הקרוב – דברו איתי בוואטסאפ 👇"
+    },
+    {
+      "id": "dog_walker_boarding",
+      "keywords": [
+        "דוגווקר",
+        "פנסיון כלבים",
+        "טיול כלבים",
+        "הולכת כלבים",
+        "פנסיון ביתי לכלבים",
+        "דוגיסיטר"
+      ],
+      "category": "pets",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מאפה",
+        "תספורת גברים",
+        "שיפוצים",
+        "מארז חם"
+      ],
+      "cameraAngle": "action dynamic eye-level shot",
+      "timingTriggers": [
+        "אמצע שבוע",
+        "חופשות",
+        "נסיעות לחו\"ל",
+        "שעות הבוקר/צהריים"
+      ],
+      "toneKeywords": [
+        "אוהב חיות",
+        "מרץ",
+        "יחס חם",
+        "פריקת אנרגיה",
+        "עדכון בוואטסאפ"
+      ],
+      "cta": {
+        "instagram": "לתיאום טיולים ופנסיון",
+        "whatsapp": "בדיקת מקום בפנסיון/טיולים"
+      },
+      "falPrompt": "Happy energetic golden retriever and French bulldog playing joyfully in a lush sunny green coastal park, soft blades of grass, gentle golden hour sunlight, sharp motion focus on expressive canine faces, commercial pet care photography, 85mm f/1.8",
+      "falNegative": "aggressive snarling dogs, cages, messy dirt mud, blurry, cartoon, extra legs, deformed paws, text, logo",
+      "waLeadTemplate": "היי [שם העסק], נשמח לשמוע על טיולים קבועים בצהריים / בדיקת מקום בפנסיון לתאריכים [תאריכים].",
+      "sampleWhatsapp": "עובדים שעות ארוכות או טסים לחופשה ורוצים שהכלב יקבל יחס של מלך? 🐕 טיולים יומיים מלאי אנרגיה ופנסיון ביתי חם עם עדכוני תמונות שוטפים. שריינו מקום בוואטסאפ 👇"
+    },
+    {
+      "id": "veterinary_clinic",
+      "keywords": [
+        "וטרינר",
+        "מרפאה וטרינרית",
+        "חיסון לכלב",
+        "חיסון חתול",
+        "עיקור",
+        "סירוס",
+        "שבב לכלב",
+        "מרפאת חיות"
+      ],
+      "category": "pets",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "פיצה",
+        "מארז",
+        "פחחות",
+        "סמאש"
+      ],
+      "cameraAngle": "clean medium eye-level clinic shot",
+      "timingTriggers": [
+        "עונת הקרציות",
+        "חיסון שנתי",
+        "שגרה שנתית"
+      ],
+      "toneKeywords": [
+        "עדין",
+        "מסור",
+        "ציוד מתקדם",
+        "אבחון מדויק",
+        "בגובה העיניים"
+      ],
+      "cta": {
+        "instagram": "לתיאום בדיקה או חיסון",
+        "whatsapp": "קביעת תור לוטרינר"
+      },
+      "falPrompt": "Modern pristine veterinary clinic examination room, stainless steel table spotless, gentle veterinary stethoscope placed beside organic pet vitamins, clean bright pastel wall, reassuring clinical healthcare environment, 35mm f/2.8",
+      "falNegative": "sick injured bloody animals, scary needles, dirty examination room, dark, cartoon, text, logo",
+      "waLeadTemplate": "שלום, אני צריך לתאם תור לבדיקה תקופתית / חיסון שנתי לכלב/חתול שלי. מה הזמינות השבוע?",
+      "sampleWhatsapp": "הגיע הזמן לחיסון שנתי, טיפול נגד תולעת הפארק או בדיקת שגרה? 🩺 מרפאה מאובזרת, יחס אישי וסבלני לכל חיית מחמד. לחצו כאן לתיאום תור מהיר בוואטסאפ 👇"
+    },
+    {
+      "id": "tambour_hardware_store",
+      "keywords": [
+        "טמבוריה",
+        "חנות חומרי בניין",
+        "טמבור",
+        "כלי עבודה",
+        "שכפול מפתחות",
+        "ברגים",
+        "צבע לקירות",
+        "אינסטלציה לבית"
+      ],
+      "category": "retail",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "קביעת תור",
+        "מניקור",
+        "טעימות",
+        "תור פנוי"
+      ],
+      "cameraAngle": "wide-angle organized interior retail",
+      "timingTriggers": [
+        "שיפוץ קיץ",
+        "הכנות לפסח",
+        "תיקוני שבת"
+      ],
+      "toneKeywords": [
+        "שכונתי",
+        "ייעוץ מקצועי",
+        "כל מה שצריך לבית",
+        "במלאי מיידי"
+      ],
+      "cta": {
+        "instagram": "לבדיקת מלאי וייעוץ",
+        "whatsapp": "בדיקת כלי עבודה/חומרים"
+      },
+      "falPrompt": "Spotless modern neighborhood hardware store, organized shelves stocked symmetrically with vibrant paint cans, premium cordless power tools neatly displayed on wooden pegboards, clean bright commercial retail photography, 28mm wide angle",
+      "falNegative": "dusty cluttered mess, broken shelves, dark dimly lit shop, rust, cartoon, text overlay, watermark",
+      "waLeadTemplate": "שלום! רציתי לבדוק אם יש לכם במלאי [שם המוצר/סוג צבע] ואם אפשר לשמור לי לאיסוף?",
+      "sampleWhatsapp": "מתחילים פרויקט צביעה או צריכים דיבלים, ברגים וכלי עבודה מקצועיים? 🛠️ הטמבורייה השכונתית שלכם עם כל הפתרונות לבית וייעוץ מקצועי בחינם. שלחו הודעה לבדיקת מלאי בוואטסאפ 👇"
+    },
+    {
+      "id": "mobile_car_wash_detailer",
+      "keywords": [
+        "שטיפת רכב עד הבית",
+        "שטיפה ידנית ניידת",
+        "דיטיילינג עד הבית",
+        "שטיפה ללא שריטות",
+        "ניקוי רכב יסודי"
+      ],
+      "category": "automotive",
+      "intent": "book_appointment",
+      "bannedWords": [
+        "מארז",
+        "תור לרופא",
+        "סיר חם",
+        "קרואסון"
+      ],
+      "cameraAngle": "3/4 hero automotive angle",
+      "timingTriggers": [
+        "ערב שבת",
+        "אחרי גשם בוצי",
+        "חגים"
+      ],
+      "toneKeywords": [
+        "ידני ומפנק",
+        "עד פתח הבית",
+        "ללא שריטות",
+        "מבריק"
+      ],
+      "cta": {
+        "instagram": "לתיאום שטיפה עד הבית",
+        "whatsapp": "שריון שטיפה לרכב"
+      },
+      "falPrompt": "Ultra-clean luxury SUV parked on a paved driveway outside a modern home, thick white foam shampoo being sprayed smoothly with a professional foam cannon, deep water gloss reflections, high-end commercial mobile detailing photography, 50mm f/2.0",
+      "falNegative": "dirty water puddle, scratched paint, rusty car wash brush, gloomy dark lighting, text, watermark",
+      "waLeadTemplate": "היי, אשמח לתאם שטיפה יסודית עד הבית לרכב שלי [דגם הרכב] באזור [עיר]. מתי יש מקום פנוי?",
+      "sampleWhatsapp": "הרכב מלא באבק אבל אין לכם זמן לעמוד שעה בתור לשטיפה? 🚘 מגיעים עד אליכם לחניה עם כל הציוד: שטיפה ידנית יסודית, שאיבה עמוקה והברקה מטורפת. תאמו שטיפה בוואטסאפ 👇"
+    },
+    {
+      "id": "deep_cleaning_maid_service",
+      "keywords": [
+        "ניקיון בתים",
+        "ניקיון אחרי שיפוץ",
+        "פוליש וניקיון",
+        "חברת ניקיון",
+        "עוזרת בית",
+        "ניקיון יסודי לפסח"
+      ],
+      "category": "home_services",
+      "intent": "quote_consultation",
+      "bannedWords": [
+        "תפריט",
+        "טעימות",
+        "הזמנת מגש"
+      ],
+      "cameraAngle": "wide-angle bright living room",
+      "timingTriggers": [
+        "מעבר דירה",
+        "סיום שיפוץ",
+        "לפני חגים"
+      ],
+      "toneKeywords": [
+        "מבריק",
+        "יסודי",
+        "ריח של ניקיון",
+        "צוות מקצועי"
+      ],
+      "cta": {
+        "instagram": "להצעת מחיר לניקיון דירה",
+        "whatsapp": "הצעת מחיר לניקיון"
+      },
+      "falPrompt": "Spacious, gleaming minimalist modern apartment living room, flawless polished ceramic floor reflecting daylight, crystal-clean large balcony glass doors, stacked crisp white microfiber towels beside an eco-friendly cleaning bottle, high-end architectural photography, 24mm lens",
+      "falNegative": "dirty floor, trash, messy clutter, bucket with dirty brown water, dark lighting, cartoon, text",
+      "waLeadTemplate": "שלום, מעוניין בהצעת מחיר לניקיון דירה [מספר חדרים] ב[עיר], אחרי שיפוץ / לפני כניסה.",
+      "sampleWhatsapp": "נכנסים לדירה חדשה או מסיימים שיפוץ? 🧼 ניקיון עמוק שמבריק כל פינה – מחלונות ומסילות ועד פוליש מושלם לרצפה. שלחו גודל דירה בוואטסאפ לקבלת הצעת מחיר במקום 👇"
+    }
+  ]
+}

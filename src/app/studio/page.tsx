@@ -27,15 +27,11 @@ export default function StudioPage() {
   const mobileStage = usePostStore((s) => s.mobileStage);
   const setMobileStage = usePostStore((s) => s.setMobileStage);
   const hasHydrated = usePostStore((s) => s._hasHydrated);
-  /** Dual enhance results — mirrored from the draft store for studio-wide sync. */
   const enhancedResults = useDraftVariantsStore((s) => s.pendingEnhanceFlavors);
   const activeFlavor = useDraftVariantsStore((s) => s.activeFlavor);
-  /** Pre-enhance radio: authentic | studio (default authentic). */
   useDraftVariantsStore((s) => s.selectedEnhanceStyle);
   const [ready, setReady] = useState(false);
 
-  // Keep mockupImage aligned when flavor toggles (store already writes generatedImage;
-  // this subscription ensures the studio page re-renders with the active pair).
   useEffect(() => {
     if (!enhancedResults || !activeFlavor) return;
     const url =
@@ -51,18 +47,23 @@ export default function StudioPage() {
   }, []);
 
   const showContent = ready || hasHydrated;
-  /** Mobile: form-only until generation; then preview-only. Desktop: both. */
   const showMobileForm = mobileStage === "form";
   const showMobilePreview = mobileStage === "preview";
 
   return (
-    <div className="no-scrollbar flex h-[calc(100vh-96px)] flex-col overflow-hidden bg-slate-100/70">
+    <div className="relative flex h-[calc(100vh-54px)] flex-col overflow-hidden bg-slate-100/70 lg:overflow-hidden">
       <Suspense fallback={null}>
         <StudioTabSync />
       </Suspense>
-      <SessionLockBanner />
 
-      <div className="mx-auto flex min-h-0 w-full max-w-[1550px] flex-1 flex-col px-3 py-1 sm:px-5">
+      {/* Overlay only — never steals vertical page space */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20">
+        <div className="pointer-events-auto">
+          <SessionLockBanner />
+        </div>
+      </div>
+
+      <div className="mx-auto flex min-h-0 w-full max-w-[1550px] flex-1 flex-col px-2 py-1 sm:px-4 lg:overflow-hidden">
         {showMobilePreview ? (
           <div className="mb-1 flex shrink-0 justify-end lg:hidden">
             <button
@@ -84,22 +85,20 @@ export default function StudioPage() {
         ) : (
           <div
             className={[
-              "grid min-h-0 flex-1 items-start gap-2.5 lg:grid-cols-2 lg:gap-3",
+              "grid min-h-0 flex-1 gap-2 lg:grid-cols-2 lg:items-stretch lg:gap-3 lg:overflow-hidden",
               showMobilePreview ? "pb-24 lg:pb-0" : "",
             ].join(" ")}
           >
-            {/* RTL: first cell = right = form; second = left = preview */}
+            {/* RTL: first cell = right = form; second = left = preview — equal columns */}
             <div
               className={[
-                "min-h-0 w-full self-start overflow-hidden",
-                showMobileForm
-                  ? "flex justify-center"
-                  : "hidden lg:block",
+                "min-h-0 w-full lg:h-full lg:overflow-hidden",
+                showMobileForm ? "flex justify-center" : "hidden lg:block",
               ].join(" ")}
             >
               <div
                 className={[
-                  "w-full",
+                  "flex h-full min-h-0 w-full flex-col lg:overflow-hidden",
                   showMobileForm ? "mx-auto max-w-lg" : "",
                 ].join(" ")}
               >
@@ -109,7 +108,7 @@ export default function StudioPage() {
 
             <div
               className={[
-                "min-h-0 w-full self-start overflow-hidden",
+                "min-h-0 w-full lg:h-full lg:overflow-hidden",
                 showMobilePreview ? "block" : "hidden lg:block",
               ].join(" ")}
             >

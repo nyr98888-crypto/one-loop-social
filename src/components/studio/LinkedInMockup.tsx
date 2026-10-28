@@ -3,30 +3,13 @@
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
 import {
-  PLACEHOLDER_IMAGE,
   usePostStore,
   selectActiveCaption,
   toHandle,
 } from "@/store/usePostStore";
-
-function PlaceholderBrandOverlay() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-[#070B19]"
-      aria-hidden
-    >
-      <Image
-        src="/logo.png"
-        alt="One Loop Social"
-        width={220}
-        height={72}
-        className="h-14 w-auto select-none object-contain opacity-90 md:h-16"
-        priority
-        unoptimized
-      />
-    </div>
-  );
-}
+import PlaceholderBrandOverlay, {
+  isBrandPlaceholder,
+} from "@/components/studio/PlaceholderBrandOverlay";
 
 /**
  * LinkedIn feed mockup — dark glass console, no white bands.
@@ -50,11 +33,11 @@ export default function LinkedInMockup() {
       aria-label="תצוגת LinkedIn"
       dir="rtl"
     >
-      <div className="flex shrink-0 items-start gap-2.5 border-b border-slate-800/60 bg-slate-900/40 px-3 py-2.5 backdrop-blur-sm">
-        <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0A66C2] text-sm font-bold text-white">
+      <div className="flex shrink-0 items-start gap-2.5 border-b border-slate-800/60 bg-slate-900/40 px-3 py-2 backdrop-blur-sm">
+        <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0A66C2] text-sm font-bold text-white">
           {name.slice(0, 1)}
           <span
-            className="absolute -bottom-0.5 -left-0.5 flex h-4 w-4 items-center justify-center rounded-sm bg-[#0A66C2] text-[8px] font-black text-white ring-1 ring-slate-900"
+            className="absolute -bottom-0.5 -left-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-sm bg-[#0A66C2] text-[7px] font-black text-white ring-1 ring-slate-900"
             title="LinkedIn"
             aria-hidden
           >
@@ -73,30 +56,30 @@ export default function LinkedInMockup() {
         <MoreHorizontal className="h-4 w-4 shrink-0 text-slate-300" aria-hidden />
       </div>
 
-      <div className="shrink-0 space-y-1.5 bg-transparent px-3 py-2">
+      <div className="min-h-0 max-h-[28%] shrink overflow-y-auto bg-transparent px-3 py-1.5">
         {headline ? (
-          <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-slate-100">
+          <p className="text-[13px] font-semibold leading-snug text-slate-100">
             {headline}
           </p>
         ) : null}
-        <p className="line-clamp-3 whitespace-pre-wrap text-[12px] leading-relaxed text-slate-300">
+        <p className="whitespace-pre-wrap text-[12px] leading-relaxed text-slate-300">
           {body}
         </p>
-        <p className="line-clamp-1 text-[11px] font-medium text-sky-400">
+        <p className="text-[11px] font-medium text-sky-400">
           {hashtags}
         </p>
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-hidden bg-[#070B19]">
+      <div className="relative mx-auto aspect-[4/5] w-full max-h-[min(40vh,320px)] max-w-[min(100%,calc(40vh*0.8),256px)] shrink-0 overflow-hidden bg-[#070B19]">
         <Image
           src={generatedImage}
           alt={headline || "LinkedIn"}
           fill
-          className="object-cover"
-          sizes="380px"
+          className="h-full w-full object-cover object-center"
+          sizes="260px"
           unoptimized
         />
-        {generatedImage === PLACEHOLDER_IMAGE ? (
+        {isBrandPlaceholder(generatedImage) ? (
           <PlaceholderBrandOverlay />
         ) : null}
       </div>

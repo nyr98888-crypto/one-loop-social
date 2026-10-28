@@ -115,6 +115,7 @@ export default function ConnectPage() {
   const disconnectChannel = useSocialConnectStore((s) => s.disconnectChannel);
   const hasHydrated = useSocialConnectStore((s) => s._hasHydrated);
 
+  const businessName = usePostStore((s) => s.businessName);
   const headline = usePostStore((s) => s.headline);
   const caption = usePostStore(selectActiveCaption);
   const generatedImage = usePostStore((s) => s.generatedImage);
@@ -235,17 +236,10 @@ export default function ConnectPage() {
   }
 
   return (
-    <div className="no-scrollbar flex h-[calc(100vh-6rem)] flex-col overflow-hidden bg-gradient-to-b from-white via-studio-bg to-sky-light/50">
-      <div className="mx-auto flex h-full w-full max-w-3xl flex-col px-4 py-3 sm:px-6 sm:py-4">
-        <header className="mb-3 shrink-0 text-center">
-          <h1 className="text-balance text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
-            בחרו פלטפורמה{" "}
-            <span className="text-sky-brand">ופרסמו</span>
-          </h1>
-        </header>
-
+    <div className="no-scrollbar flex h-[calc(100vh-54px)] flex-col overflow-hidden bg-gradient-to-b from-white via-studio-bg to-sky-light/50">
+      <div className="mx-auto flex h-full w-full max-w-[1550px] flex-col px-3 py-2 sm:px-5 sm:py-3">
         <div
-          className="mb-3 flex shrink-0 max-w-full flex-wrap items-center justify-center gap-2 rounded-[1.75rem] border border-white/80 bg-white/70 px-3 py-2.5 shadow-[0_20px_50px_-24px_rgba(14,165,233,0.35)] backdrop-blur-md sm:gap-2.5 sm:px-4"
+          className="mb-2 flex shrink-0 max-w-full flex-wrap items-center justify-center gap-2 rounded-[1.75rem] border border-white/80 bg-white/70 px-3 py-2 shadow-[0_20px_50px_-24px_rgba(14,165,233,0.35)] backdrop-blur-md sm:gap-2.5 sm:px-4"
           role="tablist"
           aria-label="בחירת פלטפורמה לפרסום"
         >
@@ -282,78 +276,153 @@ export default function ConnectPage() {
           })}
         </div>
 
-        <section
-          className="no-scrollbar min-h-0 flex-1 overflow-y-auto rounded-3xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5"
-          aria-labelledby="connect-guide-title"
-        >
-          <div className="mb-3 flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sky-light">
-              <PlatformMark platform={selected} large />
-            </span>
-            <h2
-              id="connect-guide-title"
-              className="text-base font-bold text-slate-900 sm:text-lg"
-            >
-              {guideTitle}
-            </h2>
-          </div>
+        <div className="grid min-h-0 flex-1 gap-3 overflow-hidden lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] lg:gap-4">
+          <section
+            className="no-scrollbar min-h-0 overflow-y-auto rounded-3xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5"
+            aria-labelledby="connect-guide-title"
+          >
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sky-light">
+                <PlatformMark platform={selected} large />
+              </span>
+              <h2
+                id="connect-guide-title"
+                className="text-base font-bold text-slate-900 sm:text-lg"
+              >
+                {guideTitle}
+              </h2>
+            </div>
 
-          {selected === "whatsapp" ? (
-            <WhatsAppPanel
-              phone={whatsappNumber}
-              onPhoneChange={setWhatsappNumber}
-              onShare={() => void handleWhatsAppShare()}
-            />
-          ) : null}
+            {selected === "whatsapp" ? (
+              <WhatsAppPanel
+                phone={whatsappNumber}
+                onPhoneChange={setWhatsappNumber}
+                onShare={() => void handleWhatsAppShare()}
+              />
+            ) : null}
 
-          {selected === "facebook" || selected === "instagram" ? (
-            <MetaDualPanel
-              platform={selected}
-              connected={
-                selected === "facebook"
-                  ? facebook.connected
-                  : instagram.connected
-              }
-              hydrated={hasHydrated}
-              busy={
-                busy ||
-                busyChannel ===
-                  (selected === "facebook" ? "facebook" : "instagram")
-              }
-              onBusinessConnect={() =>
-                void handleBusinessConnect(
-                  selected === "facebook" ? "facebook" : "instagram",
-                )
-              }
-              onPersonalPath={() => void handlePersonalPath(selected)}
-            />
-          ) : null}
+            {selected === "facebook" || selected === "instagram" ? (
+              <MetaDualPanel
+                platform={selected}
+                connected={
+                  selected === "facebook"
+                    ? facebook.connected
+                    : instagram.connected
+                }
+                hydrated={hasHydrated}
+                busy={
+                  busy ||
+                  busyChannel ===
+                    (selected === "facebook" ? "facebook" : "instagram")
+                }
+                onBusinessConnect={() =>
+                  void handleBusinessConnect(
+                    selected === "facebook" ? "facebook" : "instagram",
+                  )
+                }
+                onPersonalPath={() => void handlePersonalPath(selected)}
+              />
+            ) : null}
 
-          {selected === "google" ? (
-            <GooglePanel
-              connected={googleBusiness.connected}
-              hydrated={hasHydrated}
-              busy={busyChannel === "googleBusiness"}
-              onConnect={() => void handleBusinessConnect("googleBusiness")}
-            />
-          ) : null}
+            {selected === "google" ? (
+              <GooglePanel
+                connected={googleBusiness.connected}
+                hydrated={hasHydrated}
+                busy={busyChannel === "googleBusiness"}
+                onConnect={() => void handleBusinessConnect("googleBusiness")}
+              />
+            ) : null}
 
-          {selected === "easy" ? (
-            <EasyPanel onJump={() => void handleEasyJump()} />
-          ) : null}
+            {selected === "easy" ? (
+              <EasyPanel onJump={() => void handleEasyJump()} />
+            ) : null}
 
-          {selected === "linkedin" ? (
-            <ThreeStepPanel
-              steps={STEPS}
-              stepDone={stepDone}
-              busy={busy}
-              deepLabel={deep.label}
-              onStep1={() => void handleStep1()}
-              onStep2={handleStep2}
-              onStep3={() => setStepDone(3)}
-            />
-          ) : null}
-        </section>
+            {selected === "linkedin" ? (
+              <ThreeStepPanel
+                steps={STEPS}
+                stepDone={stepDone}
+                busy={busy}
+                deepLabel={deep.label}
+                onStep1={() => void handleStep1()}
+                onStep2={handleStep2}
+                onStep3={() => setStepDone(3)}
+              />
+            ) : null}
+          </section>
+
+          <aside
+            className="no-scrollbar hidden min-h-0 overflow-y-auto rounded-3xl border border-dashed border-sky-brand/30 bg-gradient-to-b from-sky-light/40 to-white p-4 shadow-sm lg:block sm:p-5"
+            aria-label="סוכן חכם"
+          >
+            <div className="mb-3 flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-sky-brand text-sm font-bold text-white">
+                AI
+              </span>
+              <div>
+                <h2 className="text-base font-bold text-slate-900">סוכן חכם</h2>
+                <p className="text-[11px] text-slate-500">בקרוב · תצוגה מקדימה</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="rounded-2xl border border-slate-200 bg-white/80 p-3">
+                <p className="mb-2 text-xs font-bold text-slate-800">
+                  תדירות תזכורות וטיוטות חכמות
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {["יומי", "3× בשבוע", "שבועי"].map((label) => (
+                    <span
+                      key={label}
+                      className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-500"
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <label className="flex cursor-not-allowed items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2.5">
+                <span className="text-xs font-semibold text-slate-700">
+                  תזכורות וטיוטות חכמות
+                </span>
+                <span
+                  className="relative h-5 w-9 rounded-full bg-sky-brand/30"
+                  aria-hidden
+                >
+                  <span className="absolute end-0.5 top-0.5 h-4 w-4 rounded-full bg-sky-brand shadow" />
+                </span>
+              </label>
+
+              <label className="flex cursor-not-allowed items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2.5">
+                <span className="text-xs font-semibold text-slate-700">
+                  הצעות מענה לטיוטה (לאישור ידני)
+                </span>
+                <span
+                  className="relative h-5 w-9 rounded-full bg-slate-200"
+                  aria-hidden
+                >
+                  <span className="absolute start-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow" />
+                </span>
+              </label>
+
+              <div className="rounded-xl border border-sky-brand/20 bg-sky-brand/10 px-3 py-2.5">
+                <p className="mb-1.5 text-[10px] font-bold text-sky-hover">
+                  דוגמת התראה מהסוכן
+                </p>
+                <p className="text-[11px] leading-relaxed text-slate-700">
+                  היי {businessName.trim() || "העסק שלך"}, שמתי לב שלא פרסמנו כבר
+                  כמה ימים. הכנתי עבורך טיוטה מותאמת אישית – כנס לבדוק ולאשר
+                  בדקה.
+                </p>
+              </div>
+
+              <p className="rounded-xl bg-slate-50 px-3 py-2 text-[11px] leading-relaxed text-slate-600">
+                הסוכן מכין טיוטות ומזכיר — הפרסום וההורדה תמיד דורשים אישור ידני
+                בלחיצה אחת מכם. אין פרסום אוטומטי ללא אישור.
+              </p>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );
@@ -424,7 +493,9 @@ function MetaDualPanel({
         <p className="mb-1 text-sm font-bold text-slate-900">
           מסלול עסקי
         </p>
-        <p className="mb-3 text-[12px] text-slate-500">פרסום אוטומטי</p>
+        <p className="mb-3 text-[12px] text-slate-500">
+          חיבור עסקי · פרסום באישור ידני
+        </p>
         {!hydrated ? (
           <div className="flex justify-center py-2">
             <Loader2 className="h-4 w-4 animate-spin text-sky-brand" />

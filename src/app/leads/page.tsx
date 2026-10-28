@@ -4,9 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
   CalendarPlus,
+  ChevronLeft,
+  ChevronRight,
   Loader2,
   MessageCircle,
   Phone,
+  RefreshCw,
 } from "lucide-react";
 import {
   buildGoogleCalendarTemplateUrl,
@@ -179,28 +182,71 @@ export default function LeadsPage() {
     setSelectedDay(null);
   }
 
+  function setMonthIndex(monthIndex: number) {
+    setCalendarMonth(
+      (prev) => new Date(prev.getFullYear(), monthIndex, 1),
+    );
+    setSelectedDay(null);
+  }
+
+  function setYear(year: number) {
+    setCalendarMonth((prev) => new Date(year, prev.getMonth(), 1));
+    setSelectedDay(null);
+  }
+
+  function syncGoogleCalendar() {
+    const focus = selectedVisits[0] ?? scheduledVisits[0] ?? null;
+    if (!focus) {
+      window.open(
+        "https://calendar.google.com/",
+        "_blank",
+        "noopener,noreferrer",
+      );
+      showToast("נפתח Google Calendar");
+      return;
+    }
+    const event = {
+      title: `${focus.customer_name} — ${focus.source_headline}`,
+      customerPhone: focus.customer_phone,
+      serviceDetails: focus.service_details || focus.source_headline,
+      start: parseLeadDate(focus.source_date),
+    };
+    window.open(
+      buildGoogleCalendarTemplateUrl(event),
+      "_blank",
+      "noopener,noreferrer",
+    );
+    downloadIcsFile(event, `lead-${focus.customer_name}.ics`);
+    showToast("מסנכרן עם Google Calendar");
+  }
+
   const monthCells = useMemo(
     () => buildMonthCells(calendarMonth),
     [calendarMonth],
   );
 
-  const monthTitle = calendarMonth.toLocaleDateString("he-IL", {
+  const monthLabel = calendarMonth.toLocaleDateString("he-IL", {
     month: "long",
-    year: "numeric",
   });
+  const yearValue = calendarMonth.getFullYear();
+  const yearOptions = useMemo(() => {
+    const y = new Date().getFullYear();
+    return Array.from({ length: 7 }, (_, i) => y - 2 + i);
+  }, []);
+  const monthOptions = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, i) =>
+        new Date(2020, i, 1).toLocaleDateString("he-IL", { month: "long" }),
+      ),
+    [],
+  );
 
   return (
-    <div className="no-scrollbar h-[calc(100vh-6rem)] overflow-hidden bg-gradient-to-b from-sky-light/40 via-studio-bg to-slate-100/80">
-      <div className="mx-auto flex h-full max-w-6xl flex-col px-4 py-3 sm:px-6 sm:py-4">
-        <header className="mb-3 shrink-0 text-center">
-          <h1 className="text-balance text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-            פניות לקוחות ויומן פגישות
-          </h1>
-        </header>
-
-        <div className="grid min-h-0 flex-1 gap-3 overflow-hidden lg:grid-cols-2 lg:gap-4">
+    <div className="no-scrollbar h-[calc(100vh-54px)] overflow-hidden bg-gradient-to-b from-sky-light/40 via-studio-bg to-slate-100/80">
+      <div className="mx-auto flex h-full w-full max-w-none flex-col px-3 py-2 sm:px-6 sm:py-3">
+        <div className="grid min-h-0 flex-1 gap-3 overflow-hidden lg:grid-cols-2 lg:gap-5">
           {/* Right (RTL first): hot leads */}
-          <section className="no-scrollbar flex min-h-0 flex-col overflow-y-auto rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+          <section className="no-scrollbar flex min-h-0 w-full flex-col overflow-y-auto rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
             <div className="mb-3 flex items-center gap-2.5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-light text-sky-hover">
                 <MessageCircle className="h-4 w-4" aria-hidden />
@@ -286,40 +332,80 @@ export default function LeadsPage() {
             )}
           </section>
 
-          {/* Left: my calendar */}
-          <section className="no-scrollbar flex min-h-0 flex-col overflow-y-auto rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
-                <CalendarDays className="h-4 w-4" aria-hidden />
-              </span>
-              <h2 className="text-base font-bold text-slate-900">היומן שלי</h2>
+          {/* Left: my calendar — full card width */}
+          <section className="no-scrollbar flex min-h-0 w-full flex-col overflow-y-auto rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+                  <CalendarDays className="h-4 w-4" aria-hidden />
+                </span>
+                <h2 className="text-base font-bold text-slate-900">היומן שלי</h2>
+              </div>
+              <button
+                type="button"
+                onClick={syncGoogleCalendar}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#4285F4]/30 bg-[#4285F4]/10 px-3 py-2 text-[11px] font-bold text-[#4285F4] transition hover:bg-[#4285F4]/15"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                סנכרן עם Google Calendar
+              </button>
             </div>
 
-            <div className="mb-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-3 sm:p-4">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => shiftMonth(-1)}
-                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 transition hover:border-sky-brand/40 hover:text-sky-hover"
-                >
-                  הקודם
-                </button>
-                <p className="text-sm font-bold text-slate-800">{monthTitle}</p>
-                <button
-                  type="button"
-                  onClick={() => shiftMonth(1)}
-                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 transition hover:border-sky-brand/40 hover:text-sky-hover"
-                >
-                  הבא
-                </button>
+            <div className="mb-4 w-full rounded-2xl border border-slate-100 bg-slate-50/80 p-3 sm:p-5">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => shiftMonth(-1)}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-sky-brand/40 hover:text-sky-hover"
+                    aria-label="חודש קודם"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                  <select
+                    className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold text-slate-800"
+                    value={calendarMonth.getMonth()}
+                    onChange={(e) => setMonthIndex(Number(e.target.value))}
+                    aria-label="בחירת חודש"
+                  >
+                    {monthOptions.map((label, i) => (
+                      <option key={label} value={i}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold text-slate-800"
+                    value={yearValue}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                    aria-label="בחירת שנה"
+                  >
+                    {yearOptions.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => shiftMonth(1)}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-sky-brand/40 hover:text-sky-hover"
+                    aria-label="חודש הבא"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                </div>
+                <p className="text-sm font-bold text-slate-700">
+                  {monthLabel} {yearValue}
+                </p>
               </div>
 
-              <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-slate-400">
+              <div className="mb-1 grid w-full grid-cols-7 gap-1.5 text-center text-[10px] font-semibold text-slate-400 sm:gap-2">
                 {WEEKDAY_LABELS.map((d) => (
                   <span key={d}>{d}</span>
                 ))}
               </div>
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid w-full grid-cols-7 gap-1.5 sm:gap-2">
                 {monthCells.map((cell, index) => {
                   if (!cell) {
                     return <span key={`pad-${index}`} />;
@@ -336,7 +422,7 @@ export default function LeadsPage() {
                         setSelectedDay((prev) => (prev === iso ? null : iso))
                       }
                       className={[
-                        "relative flex aspect-square items-center justify-center rounded-lg text-xs font-semibold transition",
+                        "relative flex aspect-square w-full items-center justify-center rounded-lg text-xs font-semibold transition sm:text-sm",
                         isSelected
                           ? "bg-sky-brand text-white shadow-sm"
                           : isToday

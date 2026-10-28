@@ -1,19 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   Check,
   Copy,
   Download,
-  ImagePlus,
   Loader2,
-  RefreshCw,
   Save,
   Trash2,
   Zap,
 } from "lucide-react";
-import type { PostDraftVariantRow } from "@/lib/db/schema";
 import { MAX_VARIANTS_ERROR_HE } from "@/lib/db/draft-constants";
 import {
   callFinalizePost,
@@ -21,11 +18,9 @@ import {
   getActiveSessionId,
 } from "@/lib/api/finalize-post";
 import { buildDigitalCardShareUrl } from "@/lib/ai/digital-card";
-import { ensureDraftSessionId } from "@/lib/session/draft-session";
 import { useEnhanceImage } from "@/hooks/useEnhanceImage";
 import {
   ENHANCE_STAGE_LABELS,
-  MAX_DRAFT_VARIANTS,
   selectIsAtVariantLimit,
   useDraftVariantsStore,
 } from "@/store/useDraftVariantsStore";
@@ -60,24 +55,14 @@ function toGuidePlatform(
 }
 
 export default function PreviewColumn() {
-  const fileRef = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   const [finalizeBusy, setFinalizeBusy] = useState(false);
 
-  const {
-    selectFileForEnhance,
-    isImageBusy,
-    atDualLimit,
-    enhanceStage,
-  } = useEnhanceImage();
+  const { isImageBusy, enhanceStage } = useEnhanceImage();
 
   const businessName = usePostStore((s) => s.businessName);
   const headline = usePostStore((s) => s.headline);
-  const instagramCaption = usePostStore((s) => s.instagramCaption);
-  const facebookCaption = usePostStore((s) => s.facebookCaption);
-  const imagePrompt = usePostStore((s) => s.imagePrompt);
-  const postGoal = usePostStore((s) => s.postGoal);
   const generatedImage = usePostStore((s) => s.generatedImage);
   const studioMode = usePostStore((s) => s.studioMode);
   const services = usePostStore((s) => s.services);
@@ -90,12 +75,6 @@ export default function PreviewColumn() {
   const whatsappBio = usePostStore((s) => s.whatsappBio);
   const activePlatform = usePostStore((s) => s.activePlatform);
   const caption = usePostStore(selectActiveCaption);
-  const setGeneratedImage = usePostStore((s) => s.setGeneratedImage);
-  const setIsImageBusy = usePostStore((s) => s.setIsImageBusy);
-  const setCaption = usePostStore((s) => s.setCaption);
-  const setInstagramCaption = usePostStore((s) => s.setInstagramCaption);
-  const setFacebookCaption = usePostStore((s) => s.setFacebookCaption);
-  const setStudioMode = usePostStore((s) => s.setStudioMode);
 
   const facebookConnected = useSocialConnectStore((s) => s.facebook.connected);
   const instagramConnected = useSocialConnectStore(
@@ -115,9 +94,6 @@ export default function PreviewColumn() {
   const variants = useDraftVariantsStore((s) => s.variants);
   const activeVariantIndex = useDraftVariantsStore((s) => s.activeVariantIndex);
   const atLimit = useDraftVariantsStore(selectIsAtVariantLimit);
-  const selectVariant = useDraftVariantsStore((s) => s.selectVariant);
-  const applyEnhanceResult = useDraftVariantsStore((s) => s.applyEnhanceResult);
-  const setSessionId = useDraftVariantsStore((s) => s.setSessionId);
   const draftSessionId = useDraftVariantsStore((s) => s.sessionId);
   const pendingEnhanceFlavors = useDraftVariantsStore(
     (s) => s.pendingEnhanceFlavors,
@@ -127,12 +103,7 @@ export default function PreviewColumn() {
     (s) => s.selectEnhanceFlavor,
   );
 
-  const displayIndex = activeVariantIndex ?? variants.length;
   const canCommit = variants.length > 0 && activeVariantIndex != null;
-  const counterLabel =
-    variants.length > 0
-      ? `גרסה ${displayIndex || 1} מתוך ${MAX_DRAFT_VARIANTS}`
-      : `גרסה 0 מתוך ${MAX_DRAFT_VARIANTS}`;
 
   const overlayLabel =
     enhanceStage !== "idle"
@@ -147,9 +118,11 @@ export default function PreviewColumn() {
     try {
       await navigator.clipboard.writeText(currentPlatformCaption);
       setCopied(true);
+      showToast("הטקסט הועתק ללוח");
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
+      showToast("ההעתקה נכשלה");
     }
   }
 
@@ -165,8 +138,10 @@ export default function PreviewColumn() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      showToast("התמונה הורדה");
     } catch {
       setImageError("הורדת התמונה נכשלה");
+      showToast("הורדת התמונה נכשלה");
     }
   }
 
@@ -177,60 +152,6 @@ export default function PreviewColumn() {
       "_blank",
       "noopener,noreferrer",
     );
-  }
-
-  async function handleRegenerateImage() {
-    if (isImageBusy || atLimit) return;
-    setImageError(null);
-    setIsImageBusy(true);
-
-    try {
-      const sessionId = ensureDraftSessionId();
-      setSessionId(sessionId);
-
-      const prompt =
-        imagePrompt ||
-        `Commercial photo for ${businessName}: ${postGoal}`;
-
-      const res = await fetch("/api/generate-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt,
-          model: "schnell",
-          imageSize: "square_hd",
-          sessionId,
-          headline: headline || undefined,
-          igCaption: instagramCaption || undefined,
-          fbCaption: facebookCaption || undefined,
-        }),
-      });
-
-      const json = (await res.json()) as {
-        imageUrl?: string;
-        variantIndex?: number;
-        variants?: PostDraftVariantRow[];
-        error?: string;
-      };
-
-      if (!res.ok || !json.imageUrl) {
-        throw new Error(json.error ?? "יצירת תמונה נכשלה");
-      }
-
-      if (json.variants && typeof json.variantIndex === "number") {
-        applyEnhanceResult({
-          sessionId,
-          variants: json.variants,
-          variantIndex: json.variantIndex,
-        });
-      } else {
-        setGeneratedImage(json.imageUrl);
-      }
-    } catch (err) {
-      setImageError(err instanceof Error ? err.message : "שגיאה בהחלפת תמונה");
-    } finally {
-      setIsImageBusy(false);
-    }
   }
 
   async function handleDiscardSession() {
@@ -250,17 +171,6 @@ export default function PreviewColumn() {
     } finally {
       setFinalizeBusy(false);
     }
-  }
-
-  async function handleUpload(file: File) {
-    setImageError(null);
-    setStudioMode("enhance");
-    // Preview only — processing starts from the control panel button
-    const result = await selectFileForEnhance(file);
-    if (!result.ok && result.error) {
-      setImageError(result.error);
-    }
-    if (fileRef.current) fileRef.current.value = "";
   }
 
   async function finalizeCommit(): Promise<boolean> {
@@ -348,69 +258,12 @@ export default function PreviewColumn() {
     );
   }
 
-  function onCaptionChange(value: string) {
-    setCaption(value);
-    if (
-      activePlatform === "facebook" ||
-      activePlatform === "google" ||
-      activePlatform === "easy" ||
-      activePlatform === "linkedin" ||
-      activePlatform === "whatsapp"
-    ) {
-      setFacebookCaption(value);
-    } else if (activePlatform === "instagram") {
-      setInstagramCaption(value);
-    } else {
-      setInstagramCaption(value);
-      setFacebookCaption(value);
-    }
-  }
-
   return (
-    <section className="flex w-full flex-col gap-2 self-start">
-      {/* Locked uniform mockup chassis — identical for all 6 platforms */}
-      <div className="relative flex h-[560px] w-full flex-col overflow-hidden rounded-2xl border border-slate-800/80 bg-[#0B0F19] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-        <div className="flex shrink-0 flex-wrap justify-center gap-2 border-b border-slate-800/80 bg-[#0B0F19] px-3 py-2">
-          <button
-            type="button"
-            onClick={handleRegenerateImage}
-            disabled={isImageBusy || atLimit}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sky-brand/40 bg-sky-brand px-3 py-1.5 text-xs font-bold text-white shadow-md transition hover:bg-sky-hover disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            שנה תמונה
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setStudioMode("enhance");
-              fileRef.current?.click();
-            }}
-            disabled={isImageBusy || atDualLimit}
-            className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-xs font-bold text-slate-200 shadow-md transition hover:border-sky-brand/50 hover:text-sky-300 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <ImagePlus className="h-3.5 w-3.5" />
-            {atDualLimit
-              ? "מקסימום גרסאות"
-              : variants.length > 0
-                ? "צור עוד גרסה"
-                : "העלה תמונה"}
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void handleUpload(file);
-            }}
-          />
-        </div>
-
+    <section className="flex h-full min-h-0 w-full flex-col gap-1.5 lg:overflow-hidden">
+      {/* Preview card — constrained so the full card fits in the viewport */}
+      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-slate-800/80 bg-[#0B0F19] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="mx-auto flex h-full w-full min-h-0 max-w-md flex-1 items-stretch justify-center overflow-hidden">
+          <div className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col overflow-hidden">
             <StudioPlatformMockup />
           </div>
 
@@ -428,9 +281,9 @@ export default function PreviewColumn() {
         </div>
 
         {pendingEnhanceFlavors && !isImageBusy ? (
-          <div className="shrink-0 border-t border-slate-800/80 bg-[#0B0F19] px-3 py-2">
-            <p className="mb-1.5 text-center text-[10px] font-bold text-slate-400">
-              בחרו גרסה — מתעדכן מיד בכל הפלטפורמות
+          <div className="shrink-0 border-t border-slate-800/80 bg-[#0B0F19] px-2 py-1.5">
+            <p className="mb-1 text-center text-[10px] font-bold text-slate-400">
+              לחצו על תמונה לבחירה
             </p>
             <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
               <button
@@ -438,31 +291,21 @@ export default function PreviewColumn() {
                 aria-pressed={activeFlavor === "natural"}
                 onClick={() => selectEnhanceFlavor("natural")}
                 className={[
-                  "flex items-center gap-2 overflow-hidden rounded-xl px-2 py-1.5 text-right transition",
+                  "overflow-hidden rounded-lg transition",
                   activeFlavor === "natural"
-                    ? "ring-2 ring-sky-500 border border-sky-400 bg-sky-500/10 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
-                    : "cursor-pointer border border-slate-800 bg-[#0B0F19]/60 opacity-70 hover:border-slate-700",
+                    ? "border-2 border-sky-400 ring-2 ring-sky-500 shadow-[0_0_12px_rgba(56,189,248,0.35)]"
+                    : "cursor-pointer border border-slate-700 opacity-75 hover:opacity-100",
                 ].join(" ")}
               >
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900">
+                <div className="relative aspect-square max-h-20 bg-slate-900">
                   <Image
                     src={pendingEnhanceFlavors.naturalUrl}
                     alt="אותנטי וטבעי"
                     fill
-                    className="object-cover"
-                    sizes="48px"
+                    className="object-cover object-center"
+                    sizes="96px"
                     unoptimized
                   />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[11px] font-bold leading-tight text-slate-100">
-                    אותנטי וטבעי
-                  </p>
-                  {activeFlavor === "natural" ? (
-                    <span className="mt-0.5 inline-block text-[9px] font-bold text-sky-300">
-                      ✓ נבחר
-                    </span>
-                  ) : null}
                 </div>
               </button>
               <button
@@ -470,31 +313,21 @@ export default function PreviewColumn() {
                 aria-pressed={activeFlavor === "studio"}
                 onClick={() => selectEnhanceFlavor("studio")}
                 className={[
-                  "flex items-center gap-2 overflow-hidden rounded-xl px-2 py-1.5 text-right transition",
+                  "overflow-hidden rounded-lg transition",
                   activeFlavor === "studio"
-                    ? "ring-2 ring-sky-500 border border-sky-400 bg-sky-500/10 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
-                    : "cursor-pointer border border-slate-800 bg-[#0B0F19]/60 opacity-70 hover:border-slate-700",
+                    ? "border-2 border-sky-400 ring-2 ring-sky-500 shadow-[0_0_12px_rgba(56,189,248,0.35)]"
+                    : "cursor-pointer border border-slate-700 opacity-75 hover:opacity-100",
                 ].join(" ")}
               >
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900">
+                <div className="relative aspect-square max-h-20 bg-slate-900">
                   <Image
                     src={pendingEnhanceFlavors.studioUrl}
                     alt="סטודיו מסחרי"
                     fill
-                    className="object-cover"
-                    sizes="48px"
+                    className="object-cover object-center"
+                    sizes="96px"
                     unoptimized
                   />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[11px] font-bold leading-tight text-slate-100">
-                    סטודיו מסחרי
-                  </p>
-                  {activeFlavor === "studio" ? (
-                    <span className="mt-0.5 inline-block text-[9px] font-bold text-sky-300">
-                      ✓ נבחר
-                    </span>
-                  ) : null}
                 </div>
               </button>
             </div>
@@ -502,46 +335,49 @@ export default function PreviewColumn() {
         ) : null}
       </div>
 
-      {/* Fixed dock under mockup — capsules + actions */}
-      <div className="shrink-0 rounded-2xl border border-slate-200 bg-white px-2 py-2 shadow-sm">
+      {/* Platform switch — always visible under preview */}
+      <div className="shrink-0 rounded-xl border border-slate-200 bg-white px-1.5 py-1.5 shadow-sm">
         <PlatformCapsules />
       </div>
 
+      {/* Dedicated export actions */}
       <div className="flex w-full shrink-0 gap-2">
-        <TrayBtn
-          onClick={() => void handleCopy()}
-          icon={
-            copied ? (
-              <Check className="h-3.5 w-3.5 text-emerald-600" />
-            ) : (
-              <Copy className="h-3.5 w-3.5" />
-            )
-          }
-          label={copied ? "הועתק בהצלחה! ✓" : "📋 העתק טקסט"}
-          className="flex-1"
-        />
-        <TrayBtn
-          onClick={() => void handleDownload()}
-          icon={<Download className="h-3.5 w-3.5" />}
-          label="📥 הורד תמונה"
-          className="flex-1"
-        />
         <button
           type="button"
-          onClick={handleSendWhatsApp}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-[#25D366] px-3 py-2 text-[11px] font-bold text-white shadow-md transition hover:brightness-105"
+          onClick={() => void handleCopy()}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-sky-brand/40 hover:text-sky-brand"
         >
-          <Zap className="h-3.5 w-3.5" />
-          שלח לוואטסאפ
+          {copied ? (
+            <Check className="h-3.5 w-3.5 text-emerald-600" />
+          ) : (
+            <Copy className="h-3.5 w-3.5" />
+          )}
+          {copied ? "הועתק ✓" : "העתק טקסט"}
+        </button>
+        <button
+          type="button"
+          onClick={() => void handleDownload()}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-sky-brand/40 hover:text-sky-brand"
+        >
+          <Download className="h-3.5 w-3.5" />
+          הורד תמונה
         </button>
       </div>
 
-      <div className="flex w-full shrink-0">
+      <div className="flex w-full shrink-0 gap-2">
+        <button
+          type="button"
+          onClick={handleSendWhatsApp}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-[#25D366] px-3 py-2 text-[11px] font-bold text-white shadow-sm transition hover:brightness-105"
+        >
+          <Zap className="h-3.5 w-3.5" />
+          וואטסאפ
+        </button>
         <button
           type="button"
           onClick={() => void handleSaveOrPublish()}
           disabled={finalizeBusy || isImageBusy}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-sm transition hover:border-sky-brand/40 hover:text-sky-brand disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-sm transition hover:border-sky-brand/40 hover:text-sky-brand disabled:cursor-not-allowed disabled:opacity-50"
         >
           {finalizeBusy ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -551,76 +387,27 @@ export default function PreviewColumn() {
             <Save className="h-3.5 w-3.5" />
           )}
           {officialConnected
-            ? "פרסום בלחיצה"
+            ? "פרסום"
             : toGuidePlatform(activePlatform)
-              ? "מדריך פרסום"
-              : "שמור / פרסם"}
+              ? "מדריך"
+              : "שמור"}
         </button>
+        {variants.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => void handleDiscardSession()}
+            disabled={finalizeBusy || isImageBusy}
+            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-2.5 py-2 text-slate-500 transition hover:border-red-200 hover:text-red-600 disabled:opacity-50"
+            title="מחק והתחל חדש"
+            aria-label="מחק והתחל חדש"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
       </div>
 
-      <div className="no-scrollbar shrink-0 space-y-2 overflow-y-auto rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
-          {variants.length > 0 ? (
-            <div className="space-y-2">
-              <div
-                className="no-scrollbar flex gap-2 overflow-x-auto pb-1"
-                role="listbox"
-                aria-label="גרסאות טיוטה"
-              >
-                {variants.map((variant) => {
-                  const active = variant.variant_index === activeVariantIndex;
-                  return (
-                    <button
-                      key={variant.id}
-                      type="button"
-                      role="option"
-                      aria-selected={active}
-                      onClick={() => selectVariant(variant.variant_index)}
-                      className={[
-                        "relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-100 transition",
-                        active
-                          ? "border-2 border-sky-500 ring-2 ring-sky-500/20"
-                          : "border border-slate-200 hover:border-sky-300",
-                      ].join(" ")}
-                      title={`גרסה ${variant.variant_index}`}
-                    >
-                      <Image
-                        src={variant.image_url}
-                        alt={`גרסה ${variant.variant_index}`}
-                        fill
-                        className="object-cover"
-                        sizes="56px"
-                        unoptimized
-                      />
-                      <span
-                        className={[
-                          "absolute inset-x-0 bottom-0 truncate bg-black/55 px-1 py-0.5 text-center text-[9px] font-bold text-white",
-                          active ? "bg-sky-600/90" : "",
-                        ].join(" ")}
-                      >
-                        גרסה {variant.variant_index}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="text-center text-[11px] font-semibold text-slate-500">
-                {counterLabel}
-              </p>
-              {atLimit ? (
-                <p
-                  className="rounded-lg bg-amber-50 px-3 py-2 text-center text-[11px] font-semibold leading-relaxed text-amber-800"
-                  role="status"
-                >
-                  הגעת למקסימום גרסאות (4/4)
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <p className="text-center text-[11px] font-semibold text-slate-400">
-              {counterLabel}
-            </p>
-          )}
-
+      {imageError || atLimit ? (
+        <div className="shrink-0 space-y-1">
           {imageError ? (
             <p className="text-xs text-amber-700" role="status">
               {imageError.includes("מקסימום")
@@ -628,56 +415,16 @@ export default function PreviewColumn() {
                 : imageError}
             </p>
           ) : null}
-
-          {variants.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => void handleDiscardSession()}
-              disabled={finalizeBusy || isImageBusy}
-              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+          {atLimit ? (
+            <p
+              className="rounded-lg bg-amber-50 px-2.5 py-1 text-center text-[11px] font-semibold text-amber-800"
+              role="status"
             >
-              <Trash2 className="h-3.5 w-3.5" />
-              מחק והתחל חדש
-            </button>
+              הגעת למקסימום גרסאות (4/4)
+            </p>
           ) : null}
-
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-slate-500">טקסט הפוסט</p>
-            <textarea
-              value={caption}
-              onChange={(e) => onCaptionChange(e.target.value)}
-              rows={3}
-              className="studio-input max-h-28 min-h-[4.5rem] resize-none text-[13px] leading-relaxed"
-              placeholder="טקסט הפוסט יופיע כאן..."
-            />
-          </div>
-      </div>
+        </div>
+      ) : null}
     </section>
-  );
-}
-
-function TrayBtn({
-  onClick,
-  icon,
-  label,
-  className,
-}: {
-  onClick: () => void;
-  icon: ReactNode;
-  label: string;
-  className?: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-700 shadow-sm transition hover:border-sky-brand/40 hover:text-sky-brand",
-        className ?? "",
-      ].join(" ")}
-    >
-      {icon}
-      {label}
-    </button>
   );
 }

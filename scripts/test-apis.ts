@@ -1,53 +1,45 @@
 /**
- * Standalone API / DB verification.
+ * Standalone API verification (Together → OpenRouter GPT-4o → FAL).
  *
  * Run: npm run test:apis
- *  or: npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/test-apis.ts
+ *  or: npx tsx --env-file=.env.local scripts/test-apis.ts
+ *  or: npx tsx scripts/test-apis.ts   (loads .env.local itself)
+ *
+ * Does NOT import Next.js "server-only" modules.
  */
 
-import { runHealthChecks } from "../src/lib/health/checks";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-async function main() {
-  console.log("\nOne Loop Social — API & database health check\n");
+function loadEnvLocal(): void {
+  const path = resolve(process.cwd(), ".env.local");
+  if (!existsSync(path)) return;
 
-  const report = await runHealthChecks();
-
-  const rows: Array<[string, string, string, string]> = [
-    ["Service", "Status", "Latency", "Message"],
-    ["-------", "------", "-------", "-------"],
-  ];
-
-  for (const [name, result] of Object.entries(report.services)) {
-    rows.push([
-      name,
-      result.status,
-      `${result.latencyMs}ms`,
-      result.message ?? "",
-    ]);
-  }
-
-  const widths = [0, 1, 2, 3].map((i) =>
-    Math.max(...rows.map((r) => r[i]!.length)),
-  );
-
-  for (const row of rows) {
-    console.log(
-      row.map((cell, i) => cell.padEnd(widths[i]!)).join("  "),
-    );
-  }
-
-  console.log(`\nOverall: ${report.ok ? "OK" : "DEGRADED"}`);
-  console.log(`Checked at: ${report.checkedAt}\n`);
-
-  if (!report.ok) {
-    console.log("Details:");
-    console.log(JSON.stringify(report.services, null, 2));
-    console.log("");
-    process.exitCode = 1;
+  for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq < 0) continue;
+    const key = trimmed.slice(0, eq).trim();
+    let value = trimmed.slice(eq + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    if (process.env[key] === undefined) {
+      process.env[key] = value;
+    }
   }
 }
 
-main().catch((err) => {
-  console.error("Health script failed:", err);
-  process.exitCode = 1;
+async function main() {
+  loadEnvLocal();
+  await import("./diagnostic-apis");
+}
+
+main().catch((err: unknown) => {
+  console.error("Diagnostic failed:", err);
+  process.exit(1);
 });

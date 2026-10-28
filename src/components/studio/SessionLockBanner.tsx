@@ -123,33 +123,30 @@ export default function SessionLockBanner() {
 
   return (
     <div
-      className="border-b border-sky-brand/20 bg-sky-light/90 text-slate-800"
+      className="mx-auto mt-2 max-w-xl rounded-2xl border border-sky-brand/30 bg-white/95 px-3 py-2 text-slate-800 shadow-lg backdrop-blur-md"
       role="status"
     >
-      <div className="mx-auto flex max-w-[1550px] flex-wrap items-center justify-between gap-2 px-4 py-2.5 text-sm sm:px-6">
-        <p className="text-[13px] font-medium">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+        <p className="text-[12px] font-medium">
           יש לך טיוטת פוסט פעילה
-          <span className="mx-1 text-slate-500">({pendingCount} גרסאות)</span>
+          <span className="mx-1 text-slate-500">({pendingCount})</span>
         </p>
-        <div className="flex flex-wrap items-center gap-2 text-[13px]">
+        <div className="flex flex-wrap items-center gap-2 text-[12px]">
           <button
             type="button"
             disabled={busy}
             onClick={() => void handleContinue()}
             className="font-semibold text-sky-brand underline-offset-2 transition hover:underline disabled:opacity-50"
           >
-            המשך לעבוד על הטיוטה
+            המשך
           </button>
-          <span className="text-slate-400" aria-hidden>
-            |
-          </span>
           <button
             type="button"
             disabled={busy}
             onClick={() => void handleDiscard()}
             className="font-medium text-slate-600 underline-offset-2 transition hover:text-red-600 hover:underline disabled:opacity-50"
           >
-            מחק והתחל חדש
+            מחק
           </button>
         </div>
       </div>

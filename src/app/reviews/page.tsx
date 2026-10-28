@@ -83,10 +83,10 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="no-scrollbar h-[calc(100vh-6rem)] overflow-hidden bg-gradient-to-b from-sky-light/40 via-studio-bg to-slate-100/80">
-      <div className="mx-auto flex h-full max-w-6xl flex-col px-4 py-3 sm:px-6 sm:py-4">
-        <header className="mb-3 shrink-0 text-center">
-          <h1 className="text-balance text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+    <div className="no-scrollbar h-[calc(100vh-54px)] overflow-hidden bg-gradient-to-b from-sky-light/40 via-studio-bg to-slate-100/80">
+      <div className="mx-auto flex h-full max-w-[1550px] flex-col px-3 py-2 sm:px-5 sm:py-3">
+        <header className="mb-2 shrink-0">
+          <h1 className="text-balance text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl">
             מרכז ביקורות ותגובות
           </h1>
         </header>

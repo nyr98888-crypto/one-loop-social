@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "next lint",
-    "test:apis": "tsx --env-file=.env.local --tsconfig tsconfig.json scripts/test-apis.ts"
+    "test:apis": "tsx --env-file=.env.local --tsconfig tsconfig.json scripts/test-apis.ts",
+    "test:diagnostic": "tsx --env-file=.env.local --tsconfig tsconfig.json scripts/diagnostic-apis.ts"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",
@@ -16,10 +17,12 @@
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
     "next-auth": "^5.0.0-beta.32",
+    "openai": "^7.45.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",
     "sharp": "^0.35.5",
+    "zod": "^4.6.7",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

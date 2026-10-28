@@ -20,7 +20,8 @@ import { insertDraftVariant } from "@/lib/db/drafts";
 import { MAX_VARIANTS_PER_SESSION } from "@/lib/db/draft-constants";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+/** 4-layer FAL can exceed 2 minutes on cold starts — keep headroom. */
+export const maxDuration = 300;
 
 function isValidImageRef(value: string): boolean {
   return (
@@ -126,6 +127,9 @@ function parseJsonBody(body: unknown): EnhanceImageRequest | null {
     parsed.igCaption = asTrimmedString(o.igCaption);
   if (asTrimmedString(o.fbCaption))
     parsed.fbCaption = asTrimmedString(o.fbCaption);
+
+  if (o.persist === false) parsed.persist = false;
+  if (o.skipLogo === true) parsed.skipLogo = true;
 
   return parsed;
 }
@@ -265,31 +269,46 @@ export async function POST(request: Request) {
     }
 
     const dual = body.dual === true;
+    const persist = body.persist !== false;
     const slotsNeeded = dual ? 2 : 1;
+    const skipLogo = body.skipLogo === true;
 
-    let nextIndex: number;
-    try {
-      const existing = await prepareDraftSession(body.sessionId);
-      const existingCount = existing.length;
-      if (existingCount + slotsNeeded > MAX_VARIANTS_PER_SESSION) {
-        return NextResponse.json(
-          {
-            error: `מקסימום ${MAX_VARIANTS_PER_SESSION} גרסאות לסשן — מחקו טיוטה או בחרו גרסה קיימת`,
-          },
-          { status: 400 },
-        );
+    let nextIndex = 1;
+    if (persist) {
+      try {
+        const existing = await prepareDraftSession(body.sessionId);
+        const existingCount = existing.length;
+        if (existingCount + slotsNeeded > MAX_VARIANTS_PER_SESSION) {
+          return NextResponse.json(
+            {
+              error: `מקסימום ${MAX_VARIANTS_PER_SESSION} גרסאות לסשן — מחקו טיוטה או בחרו גרסה קיימת`,
+            },
+            { status: 400 },
+          );
+        }
+        nextIndex = existingCount + 1;
+      } catch (err) {
+        if (err instanceof DraftSessionLimitError) {
+          return NextResponse.json({ error: err.message }, { status: 400 });
+        }
+        throw err;
       }
-      nextIndex = existingCount + 1;
-    } catch (err) {
-      if (err instanceof DraftSessionLimitError) {
-        return NextResponse.json({ error: err.message }, { status: 400 });
-      }
-      throw err;
     }
 
     // Demo / test keys — return distinctive dual URLs so the toggle works offline
     if (isFalDemoMode()) {
       if (dual) {
+        if (!persist) {
+          return NextResponse.json({
+            success: true,
+            dual: true,
+            demo: true,
+            naturalUrl: DEMO_ENHANCE_NATURAL_URL,
+            studioUrl: DEMO_ENHANCE_STUDIO_URL,
+            ok: true,
+            imageUrl: DEMO_ENHANCE_STUDIO_URL,
+          });
+        }
         const { naturalIndex, studioIndex, variants } =
           await persistDualVariants({
             sessionId: body.sessionId,
@@ -328,6 +347,19 @@ export async function POST(request: Request) {
           ? DEMO_ENHANCE_NATURAL_URL
           : DEMO_ENHANCE_STUDIO_URL;
 
+      if (!persist) {
+        return NextResponse.json({
+          success: true,
+          demo: true,
+          flavor,
+          ok: true,
+          imageUrl: demoUrl,
+          ...(flavor === "natural"
+            ? { naturalUrl: demoUrl }
+            : { studioUrl: demoUrl }),
+        });
+      }
+
       await insertDraftVariant({
         sessionId: body.sessionId,
         variantIndex: nextIndex,
@@ -359,7 +391,23 @@ export async function POST(request: Request) {
         targetPlatform: body.targetPlatform,
         customInstruction:
           body.customInstruction || body.userInstruction,
+        skipLogo,
       });
+
+      if (!persist) {
+        return NextResponse.json({
+          success: true,
+          dual: true,
+          naturalUrl: dualResult.naturalUrl,
+          studioUrl: dualResult.studioUrl,
+          ok: true,
+          imageUrl: dualResult.studioUrl,
+          layers: {
+            natural: dualResult.natural.layers,
+            studio: dualResult.studio.layers,
+          },
+        });
+      }
 
       const { naturalIndex, studioIndex, variants } = await persistDualVariants({
         sessionId: body.sessionId,
@@ -397,10 +445,24 @@ export async function POST(request: Request) {
     const pipeline = await runEnhancePipeline({
       imageUrl: body.imageUrl,
       industry: body.industry,
-      targetPlatform: body.targetPlatform,
+      targetPlatform: body.targetPlatform ?? "instagram",
       flavor,
       customInstruction: body.customInstruction || body.userInstruction,
+      skipLogo,
     });
+
+    if (!persist) {
+      return NextResponse.json({
+        success: true,
+        flavor,
+        ok: true,
+        imageUrl: pipeline.imageUrl,
+        ...(flavor === "natural"
+          ? { naturalUrl: pipeline.imageUrl }
+          : { studioUrl: pipeline.imageUrl }),
+        layers: pipeline.layers,
+      });
+    }
 
     await insertDraftVariant({
       sessionId: body.sessionId,

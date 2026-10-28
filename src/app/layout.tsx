@@ -32,7 +32,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-studio-bg font-heebo antialiased">
         <AppProviders>
           <Navbar />
-          <main>{children}</main>
+          <main className="min-h-0">{children}</main>
           <ToastHost />
         </AppProviders>
       </body>

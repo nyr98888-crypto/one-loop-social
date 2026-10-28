@@ -5,9 +5,20 @@ import type { GeneratePostRequest } from "@/lib/ai/types";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+function isUsableImageRef(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  const v = value.trim();
+  return (
+    v.startsWith("data:image/") ||
+    v.startsWith("https://") ||
+    v.startsWith("http://")
+  );
+}
+
 function parseBody(body: unknown): GeneratePostRequest | null {
   if (!body || typeof body !== "object") return null;
-  const { businessName, industry, postGoal } = body as Record<string, unknown>;
+  const { businessName, industry, postGoal, marketContext, referenceImage } =
+    body as Record<string, unknown>;
 
   if (
     typeof businessName !== "string" ||
@@ -17,14 +28,27 @@ function parseBody(body: unknown): GeneratePostRequest | null {
     return null;
   }
 
-  const trimmed = {
+  const trimmed: GeneratePostRequest = {
     businessName: businessName.trim(),
     industry: industry.trim(),
     postGoal: postGoal.trim(),
+    marketContext:
+      marketContext === "global" ? "global" : "israeli_local",
   };
 
-  if (!trimmed.businessName || !trimmed.industry || !trimmed.postGoal) {
+  if (isUsableImageRef(referenceImage)) {
+    trimmed.referenceImage = referenceImage.trim();
+  }
+
+  // Industry can be soft when a reference photo carries the visual context.
+  if (!trimmed.businessName || !trimmed.postGoal) {
     return null;
+  }
+  if (!trimmed.industry && !trimmed.referenceImage) {
+    return null;
+  }
+  if (!trimmed.industry) {
+    trimmed.industry = "עסק מקומי";
   }
 
   return trimmed;

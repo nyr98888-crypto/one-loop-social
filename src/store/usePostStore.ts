@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { MarketContext } from "@/lib/ai/types";
 
 export type ActivePlatform =
   | "whatsapp"
@@ -8,6 +9,8 @@ export type ActivePlatform =
   | "google"
   | "easy"
   | "linkedin";
+
+export type { MarketContext };
 
 /** Focused studio modes — one converting post at a time. */
 export type StudioMode = "post" | "enhance" | "card";
@@ -21,8 +24,15 @@ export interface GeneratedPayload {
   facebookCaption: string;
   imagePrompt: string;
   generatedImage: string;
+  /** Instagram CTA from unified `/api/generate`. */
+  igCtaText?: string;
+  /** WhatsApp simulation bubbles from unified `/api/generate`. */
+  waLeadIncomingMessage?: string;
+  waBusinessAutoReply?: string;
+  waActionButton?: string;
+  /** WhatsApp 1-to-many community broadcast. */
+  waBroadcastMessage?: string;
 }
-
 export interface WhatsAppCardPayload {
   bio: string;
   tagline: string;
@@ -34,6 +44,10 @@ export interface PostState {
   businessName: string;
   industry: string;
   postGoal: string;
+  /** Optional user notes for how the AI image should look (visual style). */
+  aiImageDescription: string;
+  /** Cultural Visual Expander market framing (default israeli_local). */
+  marketContext: MarketContext;
   headline: string;
   instagramCaption: string;
   facebookCaption: string;
@@ -61,15 +75,31 @@ export interface PostState {
   whatsappTagline: string;
   whatsappWaMeLink: string;
   whatsappGreeting: string;
+  /** Unified campaign — Instagram CTA label */
+  igCtaText: string;
+  /** Unified campaign — WhatsApp lead bubble */
+  waLeadIncomingMessage: string;
+  /** Unified campaign — WhatsApp business reply bubble */
+  waBusinessAutoReply: string;
+  /** Unified campaign — WhatsApp action strip label */
+  waActionButton: string;
+  /** Unified campaign — WhatsApp 1-to-many broadcast */
+  waBroadcastMessage: string;
   /** Mobile: stage 1 form / stage 2 preview */
   mobileStage: MobileStudioStage;
   isGenerating: boolean;
   isGenerated: boolean;
   isImageBusy: boolean;
+  /** True when preview media is a user-uploaded photo (not AI-generated). */
+  isUserUpload: boolean;
+  /** Client-side warmth/sharpness/contrast preview for uploads. */
+  previewEnhanceOn: boolean;
   _hasHydrated: boolean;
   setBusinessName: (value: string) => void;
   setIndustry: (value: string) => void;
   setPostGoal: (value: string) => void;
+  setAiImageDescription: (value: string) => void;
+  setMarketContext: (value: MarketContext) => void;
   setGeneratedImage: (value: string) => void;
   setCaption: (value: string) => void;
   setHeadline: (value: string) => void;
@@ -88,6 +118,8 @@ export interface PostState {
   setIsGenerating: (value: boolean) => void;
   setIsGenerated: (value: boolean) => void;
   setIsImageBusy: (value: boolean) => void;
+  setIsUserUpload: (value: boolean) => void;
+  setPreviewEnhanceOn: (value: boolean) => void;
   setHasHydrated: (value: boolean) => void;
   applyGenerated: (payload: GeneratedPayload) => void;
   applyWhatsAppCard: (payload: WhatsAppCardPayload) => void;
@@ -115,6 +147,8 @@ const initialState = {
   businessName: "",
   industry: "",
   postGoal: "",
+  aiImageDescription: "",
+  marketContext: "israeli_local" as MarketContext,
   headline: "",
   instagramCaption: "",
   facebookCaption: "",
@@ -134,10 +168,17 @@ const initialState = {
   whatsappTagline: "",
   whatsappWaMeLink: "",
   whatsappGreeting: "",
+  igCtaText: "",
+  waLeadIncomingMessage: "",
+  waBusinessAutoReply: "",
+  waActionButton: "",
+  waBroadcastMessage: "",
   mobileStage: "form" as MobileStudioStage,
   isGenerating: false,
   isGenerated: false,
   isImageBusy: false,
+  isUserUpload: false,
+  previewEnhanceOn: false,
   _hasHydrated: false,
 };
 
@@ -148,6 +189,8 @@ export const usePostStore = create<PostState>()(
       setBusinessName: (businessName) => set({ businessName }),
       setIndustry: (industry) => set({ industry }),
       setPostGoal: (postGoal) => set({ postGoal }),
+      setAiImageDescription: (aiImageDescription) => set({ aiImageDescription }),
+      setMarketContext: (marketContext) => set({ marketContext }),
       setGeneratedImage: (generatedImage) => set({ generatedImage }),
       setCaption: (caption) => set({ caption }),
       setHeadline: (headline) => set({ headline }),
@@ -167,15 +210,28 @@ export const usePostStore = create<PostState>()(
       setIsGenerating: (isGenerating) => set({ isGenerating }),
       setIsGenerated: (isGenerated) => set({ isGenerated }),
       setIsImageBusy: (isImageBusy) => set({ isImageBusy }),
+      setIsUserUpload: (isUserUpload) => set({ isUserUpload }),
+      setPreviewEnhanceOn: (previewEnhanceOn) => set({ previewEnhanceOn }),
       setHasHydrated: (_hasHydrated) => set({ _hasHydrated }),
       applyGenerated: (payload) =>
         set({
-          ...payload,
+          headline: payload.headline,
+          instagramCaption: payload.instagramCaption,
+          facebookCaption: payload.facebookCaption,
+          imagePrompt: payload.imagePrompt,
+          generatedImage: payload.generatedImage,
           caption: payload.instagramCaption,
+          igCtaText: payload.igCtaText ?? "",
+          waLeadIncomingMessage: payload.waLeadIncomingMessage ?? "",
+          waBusinessAutoReply: payload.waBusinessAutoReply ?? "",
+          waActionButton: payload.waActionButton ?? "",
+          waBroadcastMessage: payload.waBroadcastMessage ?? "",
           isGenerating: false,
           isGenerated: true,
           isImageBusy: false,
           mobileStage: "preview",
+          // AI CDN URLs clear upload flag; data: URIs keep it.
+          isUserUpload: payload.generatedImage.startsWith("data:image/"),
         }),
       applyWhatsAppCard: (payload) =>
         set({
@@ -200,11 +256,16 @@ export const usePostStore = create<PostState>()(
         businessName: state.businessName,
         industry: state.industry,
         postGoal: state.postGoal,
+        aiImageDescription: state.aiImageDescription,
+        marketContext: state.marketContext,
         headline: state.headline,
         instagramCaption: state.instagramCaption,
         facebookCaption: state.facebookCaption,
         imagePrompt: state.imagePrompt,
-        generatedImage: state.generatedImage,
+        // Skip bulky data: URLs (custom uploads) — keep CDN / placeholder only.
+        generatedImage: state.generatedImage.startsWith("data:image/")
+          ? PLACEHOLDER_IMAGE
+          : state.generatedImage,
         caption: state.caption,
         activePlatform: state.activePlatform,
         studioMode: state.studioMode,
@@ -219,6 +280,11 @@ export const usePostStore = create<PostState>()(
         whatsappTagline: state.whatsappTagline,
         whatsappWaMeLink: state.whatsappWaMeLink,
         whatsappGreeting: state.whatsappGreeting,
+        igCtaText: state.igCtaText,
+        waLeadIncomingMessage: state.waLeadIncomingMessage,
+        waBusinessAutoReply: state.waBusinessAutoReply,
+        waActionButton: state.waActionButton,
+        waBroadcastMessage: state.waBroadcastMessage,
         isGenerated: state.isGenerated,
         mobileStage: state.mobileStage,
       }),
@@ -247,6 +313,12 @@ export const usePostStore = create<PostState>()(
           ].includes(plat)
         ) {
           state.setActivePlatform("instagram");
+        }
+        if (
+          state.marketContext !== "israeli_local" &&
+          state.marketContext !== "global"
+        ) {
+          state.setMarketContext("israeli_local");
         }
         // Drop old hardcoded demo form seeds so placeholders show.
         if (state.businessName === LEGACY_DEMO_FORM.businessName) {

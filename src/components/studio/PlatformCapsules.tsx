@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { type ActivePlatform, usePostStore } from "@/store/usePostStore";
 
 const PLATFORMS: {
@@ -41,8 +42,8 @@ const PLATFORMS: {
     id: "easy",
     label: "איזי",
     activeClass:
-      "border-[#FF6B00] bg-[#FF6B00]/15 font-semibold text-[#FF6B00] shadow-[0_0_18px_rgba(255,107,0,0.4)]",
-    glowClass: "bg-[#FF6B00]/40",
+      "border-[#1296D4] bg-[#1296D4] font-semibold text-white shadow-[0_0_18px_rgba(18,150,212,0.45)]",
+    glowClass: "bg-[#1296D4]/40",
   },
   {
     id: "linkedin",
@@ -113,12 +114,15 @@ function PlatformIcon({ platform }: { platform: ActivePlatform }) {
       );
     case "easy":
       return (
-        <span
-          className="inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-[#FF6B00] text-[11px] font-black leading-none text-white"
+        <Image
+          src="/platforms/easy.png"
+          alt=""
+          width={18}
+          height={18}
+          className="h-[18px] w-[18px] shrink-0 rounded-[5px] object-cover"
           aria-hidden
-        >
-          e
-        </span>
+          unoptimized
+        />
       );
     case "linkedin":
       return (
@@ -175,7 +179,7 @@ export default function PlatformCapsules() {
                   active
                     ? activeClass
                     : id === "easy"
-                      ? "border-[#FF6B00]/45 bg-[#FFF4ED] font-medium text-[#FF6B00] hover:border-[#FF6B00]"
+                      ? "border-[#1296D4]/45 bg-[#E8F6FC] font-medium text-[#007EBA] hover:border-[#1296D4]"
                       : "border-slate-200/80 font-medium text-slate-600 hover:border-slate-300",
                 ].join(" ")}
               >
